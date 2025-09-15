@@ -1,13 +1,13 @@
 🧑‍💻 Stack tech
 Front end
-  ReactJS
-  TailWind
+  - ReactJS
+  - TailWind
 
 
 software
-  Node
-  Git
-  Docker
-  Docker-compose
-  Postman
-  Docker Compas / TablePlus
+  - Node
+  - Git
+  - Docker
+  - Docker-compose
+  - Postman
+  - Docker Compas / TablePlus
