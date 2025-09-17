@@ -1,13 +1,13 @@
-🧑‍💻 Stack tech
-Front end
-  - ReactJS
-  - TailWind
+# 🧑‍💻 Stack Tech
 
+## 🌐 Frontend
+- [ReactJS](https://react.dev/)  
+- [Tailwind CSS](https://tailwindcss.com/)  
 
-software
-  - Node
-  - Git
-  - Docker
-  - Docker-compose
-  - Postman
-  - Docker Compas / TablePlus
+## ⚙️ Software / Tools
+- [Node.js](https://nodejs.org/)  
+- [Git](https://git-scm.com/)  
+- [Docker](https://www.docker.com/)  
+- [Docker Compose](https://docs.docker.com/compose/)  
+- [Postman](https://www.postman.com/)  
+- [Docker Compass](https://www.mongodb.com/products/tools/compass) / [TablePlus](https://tableplus.com/)  
