@@ -20,35 +20,35 @@ function Registro() {
 	};
 
 	return (
-		<div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+		<div className="min-h-screen bg-black text-white flex items-center justify-center px-6 font-sans selection:bg-white/20">
 			<div className="max-w-md w-full">
 				{/* Cabecera */}
-				<div className="mb-10 text-center">
+				<div className="mb-12 text-center">
 					<Link
 						to="/"
-						className="inline-flex items-center gap-2 justify-center mb-3">
-						<span className="text-xs tracking-[0.25em] uppercase text-neutral-400">
-							MACLINE
+						className="inline-flex items-center gap-2 justify-center mb-6 hover:opacity-80 transition-opacity">
+						<span className="text-sm font-bold tracking-[0.25em] uppercase text-white">
+							MACLINE FLEET
 						</span>
 					</Link>
-					<h1 className="text-2xl font-semibold tracking-tight">
+					<h1 className="text-3xl font-medium tracking-tight mb-3">
 						Create account
 					</h1>
-					<p className="text-[11px] text-neutral-400 mt-2">
-						Regístrate para guardar favoritos y seguir colecciones.
+					<p className="text-sm text-neutral-400">
+						Join us to save favorites and track collections.
 					</p>
 				</div>
 
 				{/* Card */}
-				<div className="bg-neutral-900 border border-white/10 rounded-xl p-7 shadow-[0_12px_30px_rgba(0,0,0,0.6)]">
+				<div className="bg-neutral-900/50 border border-white/10 rounded-2xl p-8 md:p-10 shadow-2xl backdrop-blur-sm">
 					<form
 						onSubmit={manejarEnvio}
-						className="space-y-5 text-sm">
-						<div>
+						className="space-y-6">
+						<div className="space-y-2">
 							<label
 								htmlFor="nombre"
-								className="block text-[11px] font-medium uppercase tracking-[0.18em] mb-2">
-								Full name
+								className="block text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-300">
+								Full Name
 							</label>
 							<input
 								type="text"
@@ -57,16 +57,16 @@ function Registro() {
 								value={datosRegistro.nombre}
 								onChange={manejarCambio}
 								required
-								className="w-full px-3 py-2.5 rounded-md bg-black border border-white/15 text-sm outline-none focus:border-white/40"
+								className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 text-sm placeholder:text-neutral-600 focus:border-white/30 focus:bg-black focus:ring-1 focus:ring-white/30 outline-none transition-all duration-300"
 								placeholder="Adri Martínez"
 							/>
 						</div>
 
-						<div>
+						<div className="space-y-2">
 							<label
 								htmlFor="email"
-								className="block text-[11px] font-medium uppercase tracking-[0.18em] mb-2">
-								Email
+								className="block text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-300">
+								Email Address
 							</label>
 							<input
 								type="email"
@@ -75,16 +75,16 @@ function Registro() {
 								value={datosRegistro.email}
 								onChange={manejarCambio}
 								required
-								className="w-full px-3 py-2.5 rounded-md bg-black border border-white/15 text-sm outline-none focus:border-white/40"
-								placeholder="tucorreo@email.com"
+								className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 text-sm placeholder:text-neutral-600 focus:border-white/30 focus:bg-black focus:ring-1 focus:ring-white/30 outline-none transition-all duration-300"
+								placeholder="name@example.com"
 							/>
 						</div>
 
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-							<div>
+							<div className="space-y-2">
 								<label
 									htmlFor="password"
-									className="block text-[11px] font-medium uppercase tracking-[0.18em] mb-2">
+									className="block text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-300">
 									Password
 								</label>
 								<input
@@ -94,14 +94,14 @@ function Registro() {
 									value={datosRegistro.password}
 									onChange={manejarCambio}
 									required
-									className="w-full px-3 py-2.5 rounded-md bg-black border border-white/15 text-sm outline-none focus:border-white/40"
+									className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 text-sm placeholder:text-neutral-600 focus:border-white/30 focus:bg-black focus:ring-1 focus:ring-white/30 outline-none transition-all duration-300"
 									placeholder="••••••••"
 								/>
 							</div>
-							<div>
+							<div className="space-y-2">
 								<label
 									htmlFor="repetirPassword"
-									className="block text-[11px] font-medium uppercase tracking-[0.18em] mb-2">
+									className="block text-[11px] font-medium uppercase tracking-[0.2em] text-neutral-300">
 									Confirm
 								</label>
 								<input
@@ -111,48 +111,49 @@ function Registro() {
 									value={datosRegistro.repetirPassword}
 									onChange={manejarCambio}
 									required
-									className="w-full px-3 py-2.5 rounded-md bg-black border border-white/15 text-sm outline-none focus:border-white/40"
+									className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 text-sm placeholder:text-neutral-600 focus:border-white/30 focus:bg-black focus:ring-1 focus:ring-white/30 outline-none transition-all duration-300"
 									placeholder="••••••••"
 								/>
 							</div>
 						</div>
 
-						<div className="flex items-start gap-2 text-[11px] text-neutral-400">
+						<div className="flex items-start gap-3">
 							<input
 								type="checkbox"
-								className="mt-[3px] w-3 h-3 border-white/30 bg-black"
+								id="terms"
+								className="mt-1 w-4 h-4 rounded border-white/20 bg-black/50 text-white focus:ring-0 focus:ring-offset-0 checked:bg-white checked:border-white transition-colors cursor-pointer"
 								required
 							/>
-							<p>
+							<label htmlFor="terms" className="text-xs text-neutral-400 select-none leading-relaxed">
 								I agree to the{" "}
 								<button
 									type="button"
-									className="underline hover:text-white">
+									className="text-white hover:text-neutral-300 underline underline-offset-4 decoration-white/30 hover:decoration-white transition-colors">
 									Terms
 								</button>{" "}
 								and{" "}
 								<button
 									type="button"
-									className="underline hover:text-white">
+									className="text-white hover:text-neutral-300 underline underline-offset-4 decoration-white/30 hover:decoration-white transition-colors">
 									Privacy Policy
 								</button>
 								.
-							</p>
+							</label>
 						</div>
 
 						<button
 							type="submit"
-							className="w-full mt-2 py-2.5 bg-white text-black rounded-md text-[11px] tracking-[0.22em] uppercase font-medium hover:bg-neutral-200 transition">
+							className="w-full py-3.5 bg-white text-black rounded-lg text-xs tracking-[0.2em] uppercase font-bold hover:bg-neutral-200 transition-colors duration-300 mt-2">
 							Create account
 						</button>
 					</form>
 				</div>
 
-				<p className="mt-6 text-center text-[11px] text-neutral-400">
-					¿Ya tienes cuenta?{" "}
+				<p className="mt-8 text-center text-xs text-neutral-500">
+					Already have an account?{" "}
 					<Link
 						to="/login"
-						className="text-white hover:underline">
+						className="text-white hover:text-neutral-300 transition-colors underline underline-offset-4 decoration-white/30 hover:decoration-white">
 						Sign in
 					</Link>
 				</p>
@@ -162,3 +163,4 @@ function Registro() {
 }
 
 export default Registro;
+
