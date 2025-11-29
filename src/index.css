@@ -1,0 +1,143 @@
+/* =========================================
+   Tailwind (tiene que ir lo primero)
+   ========================================= */
+@import "tailwindcss";
+
+/* =========================================
+   Fuente principal: Inter
+   ========================================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+/* =========================================
+   Reset básico
+   ========================================= */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+/* Scroll suave global (si no hay reducción de movimiento) */
+@media (prefers-reduced-motion: no-preference) {
+	* {
+		scroll-behavior: smooth;
+	}
+}
+
+html {
+	font-size: 16px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Que la app ocupe toda la pantalla */
+html,
+body,
+#root {
+	height: 100%;
+	width: 100%;
+}
+
+/* =========================================
+   Estilos base del body
+   ========================================= */
+body {
+	font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display",
+		"Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	text-rendering: optimizeLegibility;
+	font-feature-settings: "kern" 1, "liga" 1;
+	font-kerning: normal;
+
+	background-color: #000000; /* fondo negro tipo MockupFlock */
+	color: #f5f5f5; /* texto claro por defecto */
+	line-height: 1.6;
+	letter-spacing: -0.011em;
+}
+
+/* El root YA NO tiene max-width ni padding.
+   Todo el layout se controla con Tailwind desde los componentes */
+#root {
+	min-height: 100vh;
+}
+
+/* Enlaces por defecto */
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* =========================================
+   Animaciones reutilizables
+   ========================================= */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes scaleIn {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes slideInLeft {
+	from {
+		opacity: 0;
+		transform: translateX(-30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+/* Clases helper que puedes usar en cualquier componente */
+.animate-fadeInUp {
+	animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fadeIn {
+	animation: fadeIn 0.5s ease-out;
+}
+
+.animate-scaleIn {
+	animation: scaleIn 0.4s ease-out;
+}
+
+.animate-slideInLeft {
+	animation: slideInLeft 0.5s ease-out;
+}
+
+.animate-float {
+	animation: float 3s ease-in-out infinite;
+}

@@ -1,0 +1,8 @@
+/* Estilos específicos de App si algún día los necesitas.
+   De momento, todo el layout se hace con Tailwind en los componentes. */
+
+/* Ejemplo: si quieres que el main de la app haga fade-in al cargar:
+.app-root-animado {
+	animation: fadeIn 0.5s ease-out;
+}
+*/
