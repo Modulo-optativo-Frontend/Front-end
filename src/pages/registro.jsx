@@ -11,7 +11,9 @@ function Registro() {
 						<div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-xs font-semibold text-white">
 							SL
 						</div>
-						<span className="text-sm font-semibold uppercase text-slate-900" style={{ letterSpacing: '0.2em' }}>
+						<span
+							className="text-sm font-semibold uppercase text-slate-900"
+							style={{ letterSpacing: "0.2em" }}>
 							SilverLine
 						</span>
 					</Link>
@@ -30,7 +32,7 @@ function Registro() {
 							type="text"
 							className="w-full border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
 							placeholder="Juan Pérez"
-							style={{ padding: '10px 16px' }}
+							style={{ padding: "10px 16px" }}
 						/>
 					</div>
 
@@ -42,7 +44,7 @@ function Registro() {
 							type="email"
 							className="w-full border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
 							placeholder="tu@email.com"
-							style={{ padding: '10px 16px' }}
+							style={{ padding: "10px 16px" }}
 						/>
 					</div>
 
@@ -54,14 +56,14 @@ function Registro() {
 							type="password"
 							className="w-full border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
 							placeholder="••••••••"
-							style={{ padding: '10px 16px' }}
+							style={{ padding: "10px 16px" }}
 						/>
 					</div>
 
 					<button
 						type="submit"
 						className="w-full bg-slate-900 text-white rounded-lg hover:bg-black transition-colors font-medium"
-						style={{ padding: '10px 16px' }}>
+						style={{ padding: "10px 16px" }}>
 						Crear cuenta
 					</button>
 				</form>

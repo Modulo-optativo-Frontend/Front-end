@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 function Home() {
@@ -40,7 +39,9 @@ function Home() {
 						<div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-xs font-semibold text-white">
 							SL
 						</div>
-						<span className="text-sm font-semibold uppercase text-slate-900" style={{ letterSpacing: '0.2rem' }}>
+						<span
+							className="text-sm font-semibold uppercase text-slate-900"
+							style={{ letterSpacing: "0.2rem" }}>
 							SilverLine
 						</span>
 					</Link>
@@ -78,7 +79,9 @@ function Home() {
 				<section className="border-b border-slate-200">
 					<div className="max-w-6xl mx-auto px-4 py-12">
 						<div className="max-w-2xl">
-							<p className="text-xs font-medium uppercase text-slate-500 mb-2" style={{ letterSpacing: '0.22em' }}>
+							<p
+								className="text-xs font-medium uppercase text-slate-500 mb-2"
+								style={{ letterSpacing: "0.22em" }}>
 								REFURBISHED MACBOOK STORE
 							</p>
 							<h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
@@ -92,11 +95,12 @@ function Home() {
 								<a
 									href="#macs"
 									className="rounded-full bg-slate-900 text-white text-sm hover:bg-black transition-colors"
-									style={{ padding: '10px 20px' }}>
+									style={{ padding: "10px 20px" }}>
 									Ver MacBooks disponibles
 								</a>
-								<button className="rounded-full border border-slate-300 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-									style={{ padding: '10px 20px' }}>
+								<button
+									className="rounded-full border border-slate-300 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+									style={{ padding: "10px 20px" }}>
 									Cómo revisamos cada equipo
 								</button>
 							</div>
@@ -110,7 +114,9 @@ function Home() {
 					className="border-b border-slate-200">
 					<div className="max-w-6xl mx-auto px-4 py-12">
 						<div className="flex items-center justify-between mb-6">
-							<h2 className="text-sm font-semibold uppercase text-slate-600" style={{ letterSpacing: '0.22em' }}>
+							<h2
+								className="text-sm font-semibold uppercase text-slate-600"
+								style={{ letterSpacing: "0.22em" }}>
 								En tendencia esta semana
 							</h2>
 							<p className="text-xs text-slate-400">Mostrando 4 modelos</p>
@@ -121,9 +127,12 @@ function Home() {
 								<div
 									key={index}
 									className="group border border-slate-200 rounded-2xl bg-white/60 hover:bg-white hover:border-slate-300 transition-colors p-4 flex flex-col gap-4">
-									<div className="rounded-xl bg-slate-100 relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
-										<span className="absolute top-3 left-3 rounded-full bg-white/80 border border-slate-200 text-slate-700" 
-											style={{ fontSize: '11px', padding: '4px 8px' }}>
+									<div
+										className="rounded-xl bg-slate-100 relative overflow-hidden"
+										style={{ aspectRatio: "4/3" }}>
+										<span
+											className="absolute top-3 left-3 rounded-full bg-white/80 border border-slate-200 text-slate-700"
+											style={{ fontSize: "11px", padding: "4px 8px" }}>
 											{mac.tag}
 										</span>
 									</div>
@@ -136,8 +145,9 @@ function Home() {
 											<span className="text-sm font-semibold text-slate-900">
 												{mac.precio}
 											</span>
-											<button className="text-xs rounded-full border border-slate-300 text-slate-700 hover:bg-slate-900 hover:text-white transition-colors"
-												style={{ padding: '6px 12px' }}>
+											<button
+												className="text-xs rounded-full border border-slate-300 text-slate-700 hover:bg-slate-900 hover:text-white transition-colors"
+												style={{ padding: "6px 12px" }}>
 												Ver más
 											</button>
 										</div>
@@ -154,7 +164,9 @@ function Home() {
 					className="border-b border-slate-200">
 					<div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
 						<div>
-							<h2 className="text-sm font-semibold uppercase text-slate-600 mb-3" style={{ letterSpacing: '0.22em' }}>
+							<h2
+								className="text-sm font-semibold uppercase text-slate-600 mb-3"
+								style={{ letterSpacing: "0.22em" }}>
 								Por qué SilverLine
 							</h2>
 							<p className="text-sm text-slate-500">
@@ -198,7 +210,9 @@ function Home() {
 			{/* FOOTER */}
 			<footer className="border-t border-slate-200">
 				<div className="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-					<p>© {new Date().getFullYear()} SilverLine. MacBooks reacondicionados.</p>
+					<p>
+						© {new Date().getFullYear()} SilverLine. MacBooks reacondicionados.
+					</p>
 					<div className="flex gap-4">
 						<a
 							href="#"
