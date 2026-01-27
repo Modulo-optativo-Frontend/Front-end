@@ -10,6 +10,7 @@ function Home() {
 	const [cartItems, setCartItems] = useState([]);
 	const [cartError, setCartError] = useState("");
 	const [isCartLoading, setIsCartLoading] = useState(false);
+	const [isCartOpen, setIsCartOpen] = useState(false);
 	const token = getAuthToken();
 
 	const cartCount = useMemo(
@@ -119,6 +120,14 @@ function Home() {
 		loadCart();
 	}, [token]);
 
+	const toggleCart = () => {
+		setIsCartOpen((prev) => !prev);
+	};
+
+	const closeCart = () => {
+		setIsCartOpen(false);
+	};
+
 	return (
 		<div
 			className="min-h-screen text-slate-900"
@@ -166,15 +175,19 @@ function Home() {
 						</a>
 					</nav>
 
-					<div className="flex items-center gap-3 text-sm">
-						<a
-							href="#carrito"
+					<div className="flex items-center gap-3 text-sm relative">
+						<button
+							type="button"
+							onClick={toggleCart}
 							className="relative rounded-full text-xs transition-colors hover:opacity-80"
 							style={{
 								padding: "8px 14px",
 								border: "1px solid var(--color-border)",
 								color: "var(--color-gray-dark)",
-							}}>
+								backgroundColor: "transparent",
+							}}
+							aria-haspopup="dialog"
+							aria-expanded={isCartOpen}>
 							Carrito
 							<span
 								className="absolute -top-2 -right-2 rounded-full text-[10px] font-semibold"
@@ -189,7 +202,147 @@ function Home() {
 								}}>
 								{cartCount}
 							</span>
-						</a>
+						</button>
+						{isCartOpen ? (
+							<div
+								role="dialog"
+								aria-label="Carrito de compra"
+								className="absolute right-0 top-12 w-[320px] rounded-2xl shadow-xl p-4 z-20"
+								style={{
+									border: "1px solid var(--color-border)",
+									backgroundColor: "rgba(255, 255, 255, 0.98)",
+								}}>
+								<div className="flex items-center justify-between mb-3">
+									<p
+										className="text-xs font-semibold uppercase"
+										style={{
+											letterSpacing: "0.2em",
+											color: "var(--color-gray-dark)",
+										}}>
+										Tu carrito
+									</p>
+									<button
+										type="button"
+										onClick={closeCart}
+										className="text-xs transition-colors hover:opacity-70"
+										style={{ color: "var(--color-gray)" }}>
+										Cerrar
+									</button>
+								</div>
+
+								{cartError ? (
+									<p
+										className="text-xs mb-2"
+										style={{ color: "var(--color-error)" }}>
+										{cartError}
+									</p>
+								) : null}
+
+								{isCartLoading ? (
+									<p
+										className="text-xs"
+										style={{ color: "var(--color-gray)" }}>
+										Cargando carrito...
+									</p>
+								) : !token ? (
+									<div className="text-xs" style={{ color: "var(--color-gray)" }}>
+										<p>Inicia sesión para guardar tu carrito.</p>
+										<Link
+											to="/login"
+											onClick={closeCart}
+											className="inline-flex mt-3 rounded-full text-xs transition-colors hover:opacity-90"
+											style={{
+												padding: "6px 12px",
+												backgroundColor: "var(--color-blue)",
+												color: "var(--color-white)",
+											}}>
+											Iniciar sesión
+										</Link>
+									</div>
+								) : cartItems.length === 0 ? (
+									<p
+										className="text-xs"
+										style={{ color: "var(--color-gray)" }}>
+										Aún no has añadido productos.
+									</p>
+								) : (
+									<div className="space-y-3">
+										{cartItems.map((item) => (
+											<div
+												key={item.producto?._id || item.producto}
+												className="flex items-start justify-between gap-3">
+												<div>
+													<p
+														className="text-xs font-medium"
+														style={{ color: "var(--color-black)" }}>
+														{item.producto?.nombre || "Producto"}
+													</p>
+													<p
+														className="text-[11px]"
+														style={{ color: "var(--color-gray)" }}>
+														{item.producto?.modelo || "Modelo no disponible"}
+													</p>
+													<p
+														className="text-[11px]"
+														style={{ color: "var(--color-gray-dark)" }}>
+														Cantidad: {item.cantidad}
+													</p>
+												</div>
+												<div className="text-right">
+													<p
+														className="text-xs font-semibold"
+														style={{ color: "var(--color-black)" }}>
+														{formatPrice(
+															(item.producto?.precio || 0) * item.cantidad
+														)}
+													</p>
+													<button
+														type="button"
+														onClick={() =>
+															handleRemoveFromCart(
+																item.producto?._id || item.producto
+															)
+														}
+														className="mt-2 text-[11px] rounded-full transition-colors hover:opacity-90"
+														style={{
+															padding: "4px 10px",
+															border: "1px solid var(--color-border)",
+															color: "var(--color-gray-dark)",
+														}}>
+														Quitar
+													</button>
+												</div>
+											</div>
+										))}
+										<div
+											className="pt-3 flex items-center justify-between"
+											style={{ borderTop: "1px solid var(--color-border)" }}>
+											<span
+												className="text-xs"
+												style={{ color: "var(--color-gray)" }}>
+												Total
+											</span>
+											<span
+												className="text-sm font-semibold"
+												style={{ color: "var(--color-black)" }}>
+												{formatPrice(cartTotal)}
+											</span>
+										</div>
+										<button
+											type="button"
+											onClick={handleClearCart}
+											className="w-full text-xs rounded-full transition-colors hover:opacity-90"
+											style={{
+												padding: "6px 12px",
+												border: "1px solid var(--color-border)",
+												color: "var(--color-gray-dark)",
+											}}>
+											Vaciar carrito
+										</button>
+									</div>
+								)}
+							</div>
+						) : null}
 						<Link
 							to="/login"
 							className="transition-colors hover:opacity-80"
@@ -373,155 +526,6 @@ function Home() {
 										</div>
 									);
 								})}
-							</div>
-						)}
-					</div>
-				</section>
-
-				{/* CARRITO */}
-				<section
-					id="carrito"
-					style={{ borderBottom: "1px solid var(--color-border)" }}>
-					<div className="max-w-6xl mx-auto px-4 py-12">
-						<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-							<div>
-								<h2
-									className="text-sm font-semibold uppercase"
-									style={{
-										letterSpacing: "0.22em",
-										color: "var(--color-gray-dark)",
-									}}>
-									Tu carrito
-								</h2>
-								<p
-									className="text-xs"
-									style={{ color: "var(--color-gray)" }}>
-									{token
-										? `${cartCount} artículos en tu carrito`
-										: "Inicia sesión para guardar tus productos"}
-								</p>
-							</div>
-							{token ? (
-								<button
-									onClick={handleClearCart}
-									disabled={cartItems.length === 0}
-									className="text-xs rounded-full transition-colors hover:opacity-90 disabled:opacity-60"
-									style={{
-										padding: "8px 16px",
-										border: "1px solid var(--color-border)",
-										color: "var(--color-gray-dark)",
-									}}>
-									Vaciar carrito
-								</button>
-							) : (
-								<Link
-									to="/login"
-									className="text-xs rounded-full transition-colors hover:opacity-90"
-									style={{
-										padding: "8px 16px",
-										backgroundColor: "var(--color-blue)",
-										color: "var(--color-white)",
-									}}>
-									Iniciar sesión
-								</Link>
-							)}
-						</div>
-
-						{cartError ? (
-							<p
-								className="text-sm mb-4"
-								style={{ color: "var(--color-error)" }}>
-								{cartError}
-							</p>
-						) : null}
-
-						{isCartLoading ? (
-							<p
-								className="text-sm"
-								style={{ color: "var(--color-gray)" }}>
-								Cargando carrito...
-							</p>
-						) : !token ? (
-							<p
-								className="text-sm"
-								style={{ color: "var(--color-gray)" }}>
-								Accede con tu cuenta para sincronizar tu carrito con el servidor.
-							</p>
-						) : cartItems.length === 0 ? (
-							<p
-								className="text-sm"
-								style={{ color: "var(--color-gray)" }}>
-								Aún no has añadido productos.
-							</p>
-						) : (
-							<div
-								className="rounded-2xl p-6"
-								style={{
-									border: "1px solid var(--color-border)",
-									backgroundColor: "rgba(255, 255, 255, 0.6)",
-								}}>
-								<div className="space-y-4">
-									{cartItems.map((item) => (
-										<div
-											key={item.producto?._id || item.producto}
-											className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-											<div>
-												<p
-													className="text-sm font-medium"
-													style={{ color: "var(--color-black)" }}>
-													{item.producto?.nombre || "Producto"}
-												</p>
-												<p
-													className="text-xs"
-													style={{ color: "var(--color-gray)" }}>
-													{item.producto?.modelo || "Modelo no disponible"}
-												</p>
-											</div>
-											<div className="flex items-center gap-4">
-												<span
-													className="text-xs"
-													style={{ color: "var(--color-gray-dark)" }}>
-													Cantidad: {item.cantidad}
-												</span>
-												<span
-													className="text-sm font-semibold"
-													style={{ color: "var(--color-black)" }}>
-													{formatPrice(
-														(item.producto?.precio || 0) * item.cantidad
-													)}
-												</span>
-												<button
-													onClick={() =>
-														handleRemoveFromCart(
-															item.producto?._id || item.producto
-														)
-													}
-													className="text-xs rounded-full transition-colors hover:opacity-90"
-													style={{
-														padding: "6px 12px",
-														border: "1px solid var(--color-border)",
-														color: "var(--color-gray-dark)",
-													}}>
-													Quitar
-												</button>
-											</div>
-										</div>
-									))}
-								</div>
-								<div
-									className="mt-6 pt-4 flex items-center justify-between"
-									style={{ borderTop: "1px solid var(--color-border)" }}>
-									<span
-										className="text-sm"
-										style={{ color: "var(--color-gray)" }}>
-										Total
-									</span>
-									<span
-										className="text-lg font-semibold"
-										style={{ color: "var(--color-black)" }}>
-										{formatPrice(cartTotal)}
-									</span>
-								</div>
 							</div>
 						)}
 					</div>
