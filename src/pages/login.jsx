@@ -1,6 +1,41 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { apiFetch } from "../lib/api.js";
+import { setAuthToken, setAuthUser } from "../lib/auth.js";
 
 function Login() {
+	const navigate = useNavigate();
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+		setError("");
+
+		if (!email || !password) {
+			setError("Email y contraseña son obligatorios");
+			return;
+		}
+
+		setIsSubmitting(true);
+		try {
+			const response = await apiFetch("/api/usuarios/login", {
+				method: "POST",
+				body: { email, password },
+			});
+			const { token, usuario } = response.data || {};
+			setAuthToken(token);
+			setAuthUser(usuario || { email });
+			navigate("/");
+		} catch (err) {
+			setError(err.message || "No se pudo iniciar sesión");
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
 	return (
 		<div
 			className="min-h-screen flex items-center justify-center px-4"
@@ -36,7 +71,9 @@ function Login() {
 					</p>
 				</div>
 
-				<form className="space-y-4">
+				<form
+					className="space-y-4"
+					onSubmit={handleSubmit}>
 					<div>
 						<label
 							className="block text-sm font-medium mb-2"
@@ -45,6 +82,8 @@ function Login() {
 						</label>
 						<input
 							type="email"
+							value={email}
+							onChange={(event) => setEmail(event.target.value)}
 							className="w-full rounded-lg focus:outline-none focus:ring-2 transition-all"
 							placeholder="tu@email.com"
 							style={{
@@ -62,6 +101,8 @@ function Login() {
 						</label>
 						<input
 							type="password"
+							value={password}
+							onChange={(event) => setPassword(event.target.value)}
 							className="w-full rounded-lg focus:outline-none focus:ring-2 transition-all"
 							placeholder="••••••••"
 							style={{
@@ -71,15 +112,24 @@ function Login() {
 						/>
 					</div>
 
+					{error ? (
+						<p
+							className="text-sm"
+							style={{ color: "var(--color-error)" }}>
+							{error}
+						</p>
+					) : null}
+
 					<button
 						type="submit"
-						className="w-full rounded-lg transition-colors hover:opacity-90 font-medium"
+						disabled={isSubmitting}
+						className="w-full rounded-lg transition-colors hover:opacity-90 font-medium disabled:opacity-60"
 						style={{
 							padding: "10px 16px",
 							backgroundColor: "var(--color-blue)",
 							color: "var(--color-white)",
 						}}>
-						Iniciar sesión
+						{isSubmitting ? "Accediendo..." : "Iniciar sesión"}
 					</button>
 				</form>
 
