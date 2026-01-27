@@ -4,6 +4,7 @@ import { apiFetch } from "../lib/api.js";
 import { getAuthToken } from "../lib/auth.js";
 
 function Home() {
+	// Estado principal: catálogo, carrito y feedback de red.
 	const [productos, setProductos] = useState([]);
 	const [productosError, setProductosError] = useState("");
 	const [isLoadingProductos, setIsLoadingProductos] = useState(true);
@@ -13,6 +14,7 @@ function Home() {
 	const [isCartOpen, setIsCartOpen] = useState(false);
 	const token = getAuthToken();
 
+	// Totales derivados del carrito (cantidad total y precio total).
 	const cartCount = useMemo(
 		() => cartItems.reduce((acc, item) => acc + item.cantidad, 0),
 		[cartItems]
@@ -27,6 +29,7 @@ function Home() {
 		[cartItems]
 	);
 
+	// Formatea precios en euros para UI.
 	const formatPrice = (value) =>
 		new Intl.NumberFormat("es-ES", {
 			style: "currency",
@@ -34,6 +37,7 @@ function Home() {
 		}).format(value || 0);
 
 	const loadProductos = async () => {
+		// Carga catálogo de productos desde la API.
 		setIsLoadingProductos(true);
 		setProductosError("");
 		try {
@@ -47,6 +51,7 @@ function Home() {
 	};
 
 	const loadCart = async () => {
+		// Carga el carrito del usuario autenticado.
 		if (!token) return;
 		setIsCartLoading(true);
 		setCartError("");
@@ -61,6 +66,7 @@ function Home() {
 	};
 
 	const handleAddToCart = async (productoId) => {
+		// Añade una unidad al carrito del producto indicado.
 		if (!token) {
 			setCartError("Inicia sesión para añadir productos al carrito");
 			return;
@@ -79,6 +85,7 @@ function Home() {
 	};
 
 	const handleRemoveFromCart = async (productoId) => {
+		// Quita una unidad del carrito.
 		if (!token) {
 			setCartError("Inicia sesión para modificar el carrito");
 			return;
@@ -96,6 +103,7 @@ function Home() {
 	};
 
 	const handleClearCart = async () => {
+		// Vacía el carrito completo.
 		if (!token) {
 			setCartError("Inicia sesión para modificar el carrito");
 			return;
@@ -113,18 +121,22 @@ function Home() {
 	};
 
 	useEffect(() => {
+		// Cargar catálogo al montar.
 		loadProductos();
 	}, []);
 
 	useEffect(() => {
+		// Recargar carrito cuando cambia el token (login/logout).
 		loadCart();
 	}, [token]);
 
 	const toggleCart = () => {
+		// Abre/cierra el desplegable del carrito.
 		setIsCartOpen((prev) => !prev);
 	};
 
 	const closeCart = () => {
+		// Cierra el desplegable del carrito.
 		setIsCartOpen(false);
 	};
 
