@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "../lib/api.js";
-import { setAuthToken, setAuthUser } from "../lib/auth.js";
+import { getAuthToken, setAuthToken, setAuthUser } from "../lib/auth.js";
 
 function Login() {
 	const navigate = useNavigate();
@@ -9,6 +9,12 @@ function Login() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	useEffect(() => {
+		if (getAuthToken()) {
+			navigate("/");
+		}
+	}, [navigate]);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -38,9 +44,9 @@ function Login() {
 
 	return (
 		<div
-			className="min-h-screen flex items-center justify-center px-4"
+			className="min-h-screen flex items-center justify-center px-4 sl-page"
 			style={{ backgroundColor: "var(--color-white)" }}>
-			<div className="w-full max-w-md">
+			<div className="w-full max-w-md auth-panel p-8">
 				<div className="text-center mb-8">
 					<Link
 						to="/"
@@ -69,6 +75,12 @@ function Login() {
 						style={{ color: "var(--color-gray)" }}>
 						Accede a tu cuenta de SilverLine
 					</p>
+					<Link
+						to="/"
+						className="inline-flex mt-4 rounded-full text-xs secondary-btn"
+						style={{ padding: "0.375rem 0.75rem" }}>
+						← Volver a la landing
+					</Link>
 				</div>
 
 				<form
@@ -84,10 +96,10 @@ function Login() {
 							type="email"
 							value={email}
 							onChange={(event) => setEmail(event.target.value)}
-							className="w-full rounded-lg focus:outline-none focus:ring-2 transition-all"
+							className="w-full rounded-lg focus:outline-none focus:ring-2 transition-all sl-input"
 							placeholder="tu@email.com"
 							style={{
-								padding: "10px 16px",
+								padding: "0.625rem 1rem",
 								border: "1px solid var(--color-border)",
 							}}
 						/>
@@ -103,10 +115,10 @@ function Login() {
 							type="password"
 							value={password}
 							onChange={(event) => setPassword(event.target.value)}
-							className="w-full rounded-lg focus:outline-none focus:ring-2 transition-all"
+							className="w-full rounded-lg focus:outline-none focus:ring-2 transition-all sl-input"
 							placeholder="••••••••"
 							style={{
-								padding: "10px 16px",
+								padding: "0.625rem 1rem",
 								border: "1px solid var(--color-border)",
 							}}
 						/>
@@ -123,9 +135,9 @@ function Login() {
 					<button
 						type="submit"
 						disabled={isSubmitting}
-						className="w-full rounded-lg transition-colors hover:opacity-90 font-medium disabled:opacity-60"
+						className="w-full rounded-lg transition-colors hover:opacity-90 font-medium disabled:opacity-60 primary-btn"
 						style={{
-							padding: "10px 16px",
+							padding: "0.625rem 1rem",
 							backgroundColor: "var(--color-blue)",
 							color: "var(--color-white)",
 						}}>

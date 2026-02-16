@@ -1,14 +1,187 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap");
 @import "tailwindcss";
 
 :root {
-	/* Colores personalizados estilo Apple */
+	/* Paleta editorial brutalista + acentos Bauhaus */
 	--color-black: #1d1d1f;
-	--color-white: #f5f5f7;
-	--color-blue: #0071e3;
-	--color-blue-dark: #0077ed;
-	--color-gray-light: #f5f5f7;
+	--color-white: #f3f0e9;
+	--color-blue: #0057ff;
+	--color-blue-dark: #0038a8;
+	--color-red: #e6392f;
+	--color-yellow: #f6c626;
+	--color-gray-light: #ece7dc;
 	--color-gray: #86868b;
 	--color-gray-dark: #424245;
-	--color-border: #d2d2d7;
+	--color-border: #1d1d1f;
 	--color-error: #c81e1e;
+	--color-surface: #f9f7f2;
+	--color-surface-soft: rgba(249, 247, 242, 0.96);
+	--shadow-soft: 0 0 0 0.08rem rgba(29, 29, 31, 0.15);
+	--shadow-card: 0.35rem 0.35rem 0 rgba(29, 29, 31, 0.9);
+	--radius-xl: 0;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family:
+		"SF Pro Text",
+		"Helvetica Neue",
+		"DM Sans",
+		sans-serif;
+	background-color: var(--color-white);
+	color: var(--color-black);
+}
+
+h1,
+h2,
+h3 {
+	font-family:
+		"SF Pro Display",
+		"Helvetica Neue",
+		"DM Sans",
+		sans-serif;
+	letter-spacing: -0.02em;
+}
+
+.sl-page {
+	position: relative;
+}
+
+.sl-page::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	background-image:
+		linear-gradient(to right, rgba(29, 29, 31, 0.08) 0.06rem, transparent 0.06rem),
+		linear-gradient(to bottom, rgba(29, 29, 31, 0.08) 0.06rem, transparent 0.06rem);
+	background-size: 3rem 3rem;
+	opacity: 0.42;
+}
+
+.sl-header {
+	background: rgba(243, 240, 233, 0.92);
+	border-bottom: 0.125rem solid var(--color-border);
+	position: relative;
+	z-index: 60;
+}
+
+.glass-panel {
+	border: 0.125rem solid var(--color-border);
+	border-radius: var(--radius-xl);
+	background: linear-gradient(165deg, var(--color-surface), var(--color-surface-soft));
+	box-shadow: var(--shadow-soft);
+}
+
+.product-card {
+	border: 0.125rem solid var(--color-border);
+	border-radius: var(--radius-xl);
+	background: linear-gradient(165deg, #fff, #f6f2e8);
+	box-shadow: 0.25rem 0.25rem 0 rgba(29, 29, 31, 0.92);
+	transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.product-card:hover {
+	transform: translateY(-0.15rem);
+	box-shadow: var(--shadow-card);
+	border-color: var(--color-black);
+}
+
+.sl-input {
+	border: 0.125rem solid var(--color-border);
+	background: rgba(255, 255, 255, 0.96);
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sl-input:focus {
+	outline: none;
+	border-color: var(--color-blue);
+	box-shadow: 0 0 0 0.2rem rgba(0, 87, 255, 0.18);
+}
+
+.primary-btn {
+	background: linear-gradient(135deg, var(--color-blue), var(--color-blue-dark));
+	color: var(--color-white);
+	border: 0.125rem solid var(--color-border);
+	box-shadow: 0.18rem 0.18rem 0 rgba(29, 29, 31, 0.92);
+	transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.primary-btn:hover {
+	filter: brightness(1.03);
+	transform: translateY(-0.08rem);
+	box-shadow: 0.25rem 0.25rem 0 rgba(29, 29, 31, 0.92);
+}
+
+.secondary-btn {
+	background: rgba(255, 255, 255, 0.92);
+	border: 0.125rem solid var(--color-border);
+	color: var(--color-gray-dark);
+	transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.secondary-btn:hover {
+	border-color: var(--color-black);
+	background: var(--color-yellow);
+}
+
+.hero-title {
+	animation: slideUpFade 0.65s ease both;
+}
+
+.hero-subtitle {
+	animation: slideUpFade 0.65s ease both;
+	animation-delay: 0.12s;
+}
+
+.auth-panel {
+	border: 0.125rem solid var(--color-border);
+	border-radius: 0;
+	background: linear-gradient(170deg, #fff, #f3eee2);
+	box-shadow: var(--shadow-card);
+}
+
+.trend-grid {
+	gap: 1.1rem;
+}
+
+.trend-card-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.trend-price {
+	margin-top: 0.65rem;
+}
+
+.trend-cta {
+	margin-top: 0.7rem;
+}
+
+.bauhaus-chip {
+	border: 0.125rem solid var(--color-border);
+	background: var(--color-yellow);
+	color: var(--color-black);
+}
+
+@keyframes slideUpFade {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }

@@ -1,7 +1,8 @@
 ﻿import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "../lib/api.js";
-import { getAuthToken } from "../lib/auth.js";
+import { clearAuth, getAuthToken } from "../lib/auth.js";
+import { getProductoImageUrl } from "../lib/media.js";
 
 function Home() {
 	// Estado principal: catálogo, carrito y feedback de red.
@@ -10,9 +11,11 @@ function Home() {
 	const [isLoadingProductos, setIsLoadingProductos] = useState(true);
 	const [cartItems, setCartItems] = useState([]);
 	const [cartError, setCartError] = useState("");
+	const [cartMessage, setCartMessage] = useState("");
 	const [isCartLoading, setIsCartLoading] = useState(false);
 	const [isCartOpen, setIsCartOpen] = useState(false);
 	const token = getAuthToken();
+	const navigate = useNavigate();
 
 	// Totales derivados del carrito (cantidad total y precio total).
 	const cartCount = useMemo(
@@ -35,6 +38,9 @@ function Home() {
 			style: "currency",
 			currency: "EUR",
 		}).format(value || 0);
+
+	const productosDestacados = productos.slice(0, 5);
+	const heroImageUrl = getProductoImageUrl(productos[0] || {});
 
 	const loadProductos = async () => {
 		// Carga catálogo de productos desde la API.
@@ -69,9 +75,11 @@ function Home() {
 		// Añade una unidad al carrito del producto indicado.
 		if (!token) {
 			setCartError("Inicia sesión para añadir productos al carrito");
+			setCartMessage("Necesitas iniciar sesión para poder añadir productos.");
 			return;
 		}
 		setCartError("");
+		setCartMessage("");
 		try {
 			const response = await apiFetch("/api/carrito/items", {
 				method: "POST",
@@ -79,8 +87,11 @@ function Home() {
 				token,
 			});
 			setCartItems(response.items || []);
+			setCartMessage("Producto añadido al carrito.");
+			setIsCartOpen(true);
 		} catch (err) {
 			setCartError(err.message || "No se pudo añadir el producto");
+			setCartMessage(err.message || "No se pudo añadir el producto.");
 		}
 	};
 
@@ -140,13 +151,22 @@ function Home() {
 		setIsCartOpen(false);
 	};
 
+	const handleLogout = () => {
+		clearAuth();
+		setCartItems([]);
+		setCartMessage("");
+		setCartError("");
+		setIsCartOpen(false);
+		navigate("/");
+	};
+
 	return (
 		<div
-			className="min-h-screen text-slate-900"
+			className="min-h-screen text-slate-900 sl-page"
 			style={{ backgroundColor: "var(--color-white)" }}>
 			{/* NAVBAR */}
 			<header
-				className="backdrop-blur-md"
+				className="backdrop-blur-md sl-header"
 				style={{
 					borderBottom: "1px solid var(--color-border)",
 					backgroundColor: "rgba(245, 245, 247, 0.8)",
@@ -185,6 +205,12 @@ function Home() {
 							style={{ color: "var(--color-gray-dark)" }}>
 							Por qué SilverLine
 						</a>
+						<Link
+							to="/catalogo"
+							className="transition-colors hover:opacity-80"
+							style={{ color: "var(--color-gray-dark)" }}>
+							Catálogo
+						</Link>
 					</nav>
 
 					<div className="flex items-center gap-3 text-sm relative">
@@ -193,7 +219,7 @@ function Home() {
 							onClick={toggleCart}
 							className="relative rounded-full text-xs transition-colors hover:opacity-80"
 							style={{
-								padding: "8px 14px",
+								padding: "0.5rem 0.875rem",
 								border: "1px solid var(--color-border)",
 								color: "var(--color-gray-dark)",
 								backgroundColor: "transparent",
@@ -215,14 +241,14 @@ function Home() {
 								{cartCount}
 							</span>
 						</button>
-						{isCartOpen ? (
-							<div
-								role="dialog"
-								aria-label="Carrito de compra"
-								className="absolute right-0 top-12 w-[320px] rounded-2xl shadow-xl p-4 z-20"
-								style={{
-									border: "1px solid var(--color-border)",
-									backgroundColor: "rgba(255, 255, 255, 0.98)",
+							{isCartOpen ? (
+								<div
+									role="dialog"
+									aria-label="Carrito de compra"
+									className="absolute right-0 top-12 w-[20rem] rounded-2xl shadow-xl p-4 z-[100]"
+									style={{
+										border: "1px solid var(--color-border)",
+										backgroundColor: "rgba(255, 255, 255, 0.98)",
 								}}>
 								<div className="flex items-center justify-between mb-3">
 									<p
@@ -264,7 +290,7 @@ function Home() {
 											onClick={closeCart}
 											className="inline-flex mt-3 rounded-full text-xs transition-colors hover:opacity-90"
 											style={{
-												padding: "6px 12px",
+												padding: "0.375rem 0.75rem",
 												backgroundColor: "var(--color-blue)",
 												color: "var(--color-white)",
 											}}>
@@ -317,7 +343,7 @@ function Home() {
 														}
 														className="mt-2 text-[11px] rounded-full transition-colors hover:opacity-90"
 														style={{
-															padding: "4px 10px",
+																padding: "0.25rem 0.625rem",
 															border: "1px solid var(--color-border)",
 															color: "var(--color-gray-dark)",
 														}}>
@@ -345,7 +371,7 @@ function Home() {
 											onClick={handleClearCart}
 											className="w-full text-xs rounded-full transition-colors hover:opacity-90"
 											style={{
-												padding: "6px 12px",
+												padding: "0.375rem 0.75rem",
 												border: "1px solid var(--color-border)",
 												color: "var(--color-gray-dark)",
 											}}>
@@ -355,21 +381,34 @@ function Home() {
 								)}
 							</div>
 						) : null}
-						<Link
-							to="/login"
-							className="transition-colors hover:opacity-80"
-							style={{ color: "var(--color-gray-dark)" }}>
-							Iniciar sesión
-						</Link>
-						<Link
-							to="/registro"
-							className="px-4 py-2 rounded-full text-sm transition-colors hover:opacity-90"
-							style={{
-								backgroundColor: "var(--color-blue)",
-								color: "var(--color-white)",
-							}}>
-							Crear cuenta
-						</Link>
+						{token ? (
+							<button
+								type="button"
+								onClick={handleLogout}
+								className="px-4 py-2 rounded-full text-sm transition-colors hover:opacity-90 secondary-btn"
+								style={{ padding: "0.5rem 0.95rem" }}>
+								Logout
+							</button>
+						) : (
+							<>
+								<Link
+									to="/login"
+									className="transition-colors hover:opacity-80"
+									style={{ color: "var(--color-gray-dark)" }}>
+									Iniciar sesión
+								</Link>
+								<Link
+									to="/registro"
+									className="px-4 py-2 rounded-full text-sm transition-colors hover:opacity-90 primary-btn"
+									style={{
+										padding: "0.5rem 0.95rem",
+										backgroundColor: "var(--color-blue)",
+										color: "var(--color-white)",
+									}}>
+									Crear cuenta
+								</Link>
+							</>
+						)}
 					</div>
 				</div>
 			</header>
@@ -377,7 +416,7 @@ function Home() {
 			<main>
 				{/* HERO */}
 				<section style={{ borderBottom: "1px solid var(--color-border)" }}>
-					<div className="max-w-6xl mx-auto px-4 py-12">
+					<div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 						<div className="max-w-2xl">
 							<p
 								className="text-xs font-medium uppercase mb-2"
@@ -385,35 +424,60 @@ function Home() {
 								REFURBISHED MACBOOK STORE
 							</p>
 							<h1
-								className="text-4xl md:text-5xl font-semibold tracking-tight mb-4"
+								className="text-4xl md:text-5xl font-semibold tracking-tight mb-4 hero-title"
 								style={{ color: "var(--color-black)" }}>
 								MacBooks reacondicionados. Listos para crear.
 							</h1>
 							<p
-								className="text-sm md:text-base mb-6"
+								className="text-sm md:text-base mb-6 hero-subtitle"
 								style={{ color: "var(--color-gray)" }}>
 								Certificado. Conectar y crear.
 							</p>
 							<div className="flex flex-wrap gap-3">
-								<a
-									href="#macs"
-									className="rounded-full text-sm transition-colors hover:opacity-90"
+								<Link
+									to="/catalogo"
+									className="rounded-full text-sm transition-colors hover:opacity-90 primary-btn"
 									style={{
-										padding: "10px 20px",
+										padding: "0.625rem 1.25rem",
 										backgroundColor: "var(--color-blue)",
 										color: "var(--color-white)",
 									}}>
-									Ver MacBooks disponibles
-								</a>
+									Ir al catálogo completo
+								</Link>
 								<button
-									className="rounded-full text-sm transition-colors hover:opacity-80"
+									className="rounded-full text-sm transition-colors hover:opacity-80 secondary-btn"
 									style={{
-										padding: "10px 20px",
+										padding: "0.625rem 1.25rem",
 										border: "1px solid var(--color-border)",
 										color: "var(--color-black)",
 									}}>
 									Cómo revisamos cada equipo
 								</button>
+							</div>
+						</div>
+						<div className="product-card p-3 md:p-4">
+							<div
+								className="rounded-2xl relative overflow-hidden"
+								style={{
+									aspectRatio: "16/10",
+									backgroundColor: "var(--color-gray-light)",
+								}}>
+								<img
+									src={heroImageUrl}
+									alt="MacBook destacado de SilverLine"
+									className="absolute inset-0 h-full w-full object-cover"
+								/>
+								<div
+									className="absolute inset-0"
+									style={{
+										background:
+											"linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.35) 100%)",
+									}}
+								/>
+								<div className="absolute left-4 bottom-4 text-white">
+									<p className="text-xs uppercase tracking-[0.2em] opacity-90 bauhaus-chip inline-block px-2 py-1">Destacado</p>
+									<p className="text-lg font-semibold mt-2">MacBook reacondicionado premium</p>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -436,9 +500,21 @@ function Home() {
 							<p
 								className="text-xs"
 								style={{ color: "var(--color-gray)" }}>
-								Mostrando 4 modelos
+								Mostrando {productosDestacados.length} modelos
 							</p>
 						</div>
+
+						{cartMessage ? (
+							<p
+								className="text-sm mb-4"
+								style={{
+									color: cartMessage.includes("añadido")
+										? "#0a7f39"
+										: "var(--color-error)",
+								}}>
+								{cartMessage}
+							</p>
+						) : null}
 
 						{isLoadingProductos ? (
 							<p
@@ -459,9 +535,10 @@ function Home() {
 								No hay productos disponibles ahora mismo.
 							</p>
 						) : (
-							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-								{productos.map((producto) => {
-									const detalle = [
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 trend-grid">
+								{productosDestacados.map((producto) => {
+									const urlImagenProducto = getProductoImageUrl(producto);
+									const detalleProducto = [
 										producto.modelo,
 										producto.almacenamientoGb
 											? `${producto.almacenamientoGb} GB`
@@ -473,7 +550,7 @@ function Home() {
 										.filter(Boolean)
 										.join(" · ");
 
-									const tag = producto.condicion
+									const etiquetaEstado = producto.condicion
 										? `Condición ${producto.condicion}`
 										: producto.enStock
 											? "Disponible"
@@ -482,7 +559,7 @@ function Home() {
 									return (
 										<div
 											key={producto._id}
-											className="group rounded-2xl transition-all p-4 flex flex-col gap-4 hover:shadow-lg"
+											className="group rounded-2xl transition-all p-4 flex flex-col gap-4 hover:shadow-lg product-card"
 											style={{
 												border: "1px solid var(--color-border)",
 												backgroundColor: "rgba(255, 255, 255, 0.6)",
@@ -493,6 +570,14 @@ function Home() {
 													aspectRatio: "4/3",
 													backgroundColor: "var(--color-gray-light)",
 												}}>
+												{urlImagenProducto ? (
+													<img
+														src={urlImagenProducto}
+														alt={producto.nombre}
+														className="absolute inset-0 h-full w-full object-cover"
+														loading="lazy"
+													/>
+												) : null}
 												<span
 													className="absolute top-3 left-3 rounded-full"
 													style={{
@@ -502,10 +587,10 @@ function Home() {
 														border: "1px solid var(--color-border)",
 														color: "var(--color-black)",
 													}}>
-													{tag}
+													{etiquetaEstado}
 												</span>
 											</div>
-											<div className="flex flex-col gap-2">
+											<div className="trend-card-content">
 												<h3
 													className="text-sm font-medium"
 													style={{ color: "var(--color-black)" }}>
@@ -514,20 +599,22 @@ function Home() {
 												<p
 													className="text-xs"
 													style={{ color: "var(--color-gray)" }}>
-													{detalle || producto.descripcion || "Especificaciones disponibles"}
+													{detalleProducto || producto.descripcion || "Especificaciones disponibles"}
 												</p>
-												<div className="flex items-center justify-between mt-2">
+												<div className="trend-price">
 													<span
 														className="text-sm font-semibold"
 														style={{ color: "var(--color-black)" }}>
 														{formatPrice(producto.precio)}
 													</span>
+												</div>
+												<div className="trend-cta">
 													<button
 														disabled={!producto.enStock}
 														onClick={() => handleAddToCart(producto._id)}
-														className="text-xs rounded-full transition-colors hover:opacity-90 disabled:opacity-60"
+														className="w-full text-xs rounded-full transition-colors hover:opacity-90 disabled:opacity-60 primary-btn"
 														style={{
-															padding: "6px 12px",
+															padding: "0.4rem 0.75rem",
 															backgroundColor: "var(--color-blue)",
 															color: "var(--color-white)",
 														}}>
