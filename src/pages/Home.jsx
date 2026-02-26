@@ -1,0 +1,98 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SiteHeader from "../components/home/SiteHeader.jsx";
+import HeroSection from "../components/home/HeroSection.jsx";
+import TrendingProductsSection from "../components/home/TrendingProductsSection.jsx";
+import WhySilverLineSection from "../components/home/WhySilverLineSection.jsx";
+import SiteFooter from "../components/home/SiteFooter.jsx";
+import { apiFetch } from "../lib/api.js";
+import { clearAuth, getAuthToken } from "../lib/auth.js";
+import { getProductoImageUrl } from "../lib/media.js";
+
+function Home() {
+	const navigate = useNavigate();
+
+	const [productos, setProductos] = useState([]);
+	const [productosError, setProductosError] = useState("");
+	const [isLoadingProductos, setIsLoadingProductos] = useState(true);
+	const [cartMessage, setCartMessage] = useState("");
+
+	const token = getAuthToken();
+
+	function formatPrice(value) {
+		return new Intl.NumberFormat("es-ES", {
+			style: "currency",
+			currency: "EUR",
+		}).format(value || 0);
+	}
+
+	useEffect(() => {
+		async function loadProductos() {
+			setIsLoadingProductos(true);
+			setProductosError("");
+
+			try {
+				const response = await apiFetch("/api/productos");
+				setProductos(response.data || []);
+			} catch (error) {
+				setProductosError(error.message || "No se pudieron cargar productos");
+			} finally {
+				setIsLoadingProductos(false);
+			}
+		}
+
+		loadProductos();
+	}, []);
+
+	async function handleAddToCart(productoId) {
+		if (!token) {
+			navigate("/login");
+			return;
+		}
+
+		setCartMessage("");
+
+		try {
+			await apiFetch("/api/carrito/items", {
+				method: "POST",
+				body: { productoId },
+				token,
+			});
+			setCartMessage("Producto añadido al carrito.");
+		} catch (error) {
+			setCartMessage(error.message || "No se pudo añadir el producto.");
+		}
+	}
+
+	function handleLogout() {
+		clearAuth();
+		navigate("/");
+	}
+
+	const productosDestacados = productos.slice(0, 5);
+	const heroImageUrl = getProductoImageUrl(productos[0] || {});
+
+	return (
+		<div className="min-h-screen bg-white text-slate-900 sl-page">
+			<SiteHeader token={token} handleLogout={handleLogout} />
+
+			<main>
+				<HeroSection heroImageUrl={heroImageUrl} />
+				<TrendingProductsSection
+					productosDestacados={productosDestacados}
+					productos={productos}
+					cartMessage={cartMessage}
+					isLoadingProductos={isLoadingProductos}
+					productosError={productosError}
+					formatPrice={formatPrice}
+					handleAddToCart={handleAddToCart}
+				/>
+				<WhySilverLineSection />
+			</main>
+
+			<SiteFooter />
+		</div>
+	);
+}
+
+export default Home;

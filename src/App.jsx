@@ -1,9 +1,10 @@
-import "./App.css";
-import { Home } from "./pages/home";
-import { Catalogo } from "./pages/catalogo";
-import { Login } from "./pages/login";
-import { Registro } from "./pages/registro";
-import { DetalleProducto } from "./pages/detalle";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import { Catalogo } from "./pages/Catalogo";
+import { Detalle } from "./pages/Detalle";
+import { Carrito } from "./pages/Carrito";
+import { Login } from "./pages/Login";
+import { Registro } from "./pages/Registro";
 
 function App() {
 	return (
@@ -17,16 +18,20 @@ function App() {
 				element={<Catalogo />}
 			/>
 			<Route
+				path="/detalle/:id"
+				element={<Detalle />}
+			/>
+			<Route
+				path="/carrito"
+				element={<Carrito />}
+			/>
+			<Route
 				path="/login"
 				element={<Login />}
 			/>
 			<Route
 				path="/registro"
 				element={<Registro />}
-			/>
-			<Route
-				path="/productos/:id"
-				element={<DetalleProducto />}
 			/>
 		</Routes>
 	);
