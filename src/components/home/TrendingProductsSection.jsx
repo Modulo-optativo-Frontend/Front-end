@@ -14,7 +14,9 @@ function TrendingProductsSection({
 		: "text-(--color-error)";
 
 	return (
-		<section id="macs" className="border-b border-(--color-border)">
+		<section
+			id="macs"
+			className="border-b border-(--color-border)">
 			<div className="max-w-6xl mx-auto px-4 py-12">
 				<div className="flex items-center justify-between mb-6">
 					<h2 className="text-(--color-gray-dark) text-sm font-semibold uppercase tracking-[0.22em]">
@@ -36,15 +38,21 @@ function TrendingProductsSection({
 				) : productosError ? (
 					<p className="text-(--color-error) text-sm">{productosError}</p>
 				) : productos.length === 0 ? (
-					<p className="text-(--color-gray) text-sm">No hay productos disponibles ahora mismo.</p>
+					<p className="text-(--color-gray) text-sm">
+						No hay productos disponibles ahora mismo.
+					</p>
 				) : (
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 trend-grid">
 						{productosDestacados.map((producto) => {
 							const urlImagenProducto = getProductoImageUrl(producto);
 							const detalleProducto = [
 								producto.modelo,
-								producto.almacenamientoGb ? `${producto.almacenamientoGb} GB` : null,
-								producto.memoriaRamGb ? `${producto.memoriaRamGb} GB RAM` : null,
+								producto.almacenamientoGb
+									? `${producto.almacenamientoGb} GB`
+									: null,
+								producto.memoriaRamGb
+									? `${producto.memoriaRamGb} GB RAM`
+									: null,
 							]
 								.filter(Boolean)
 								.join(" · ");
@@ -59,7 +67,9 @@ function TrendingProductsSection({
 								<div
 									key={producto._id}
 									className="product-card group flex flex-col gap-4 rounded-2xl border border-(--color-border) bg-[rgba(255,255,255,0.6)] p-4 transition-all hover:shadow-lg">
-									<div className="relative overflow-hidden rounded-xl bg-(--color-gray-light)" style={{ aspectRatio: "4/3" }}>
+									<div
+										className="relative overflow-hidden rounded-xl bg-(--color-gray-light)"
+										style={{ aspectRatio: "4/3" }}>
 										{urlImagenProducto ? (
 											<img
 												src={urlImagenProducto}
@@ -68,15 +78,18 @@ function TrendingProductsSection({
 												loading="lazy"
 											/>
 										) : null}
-										<span
-											className="absolute left-3 top-3 rounded-full border border-(--color-border) bg-[rgba(255,255,255,0.9)] px-2 py-1 text-[11px] text-black">
+										<span className="absolute left-3 top-3 rounded-full border border-(--color-border) bg-[rgba(255,255,255,0.9)] px-2 py-1 text-[11px] text-black">
 											{etiquetaEstado}
 										</span>
 									</div>
 									<div className="trend-card-content">
-										<h3 className="text-black text-sm font-medium">{producto.nombre}</h3>
+										<h3 className="text-black text-sm font-medium">
+											{producto.nombre}
+										</h3>
 										<p className="text-(--color-gray) text-xs">
-											{detalleProducto || producto.descripcion || "Especificaciones disponibles"}
+											{detalleProducto ||
+												producto.descripcion ||
+												"Especificaciones disponibles"}
 										</p>
 										<div className="trend-price">
 											<span className="text-black text-sm font-semibold">
