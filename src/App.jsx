@@ -5,6 +5,7 @@ import { Detalle } from "./pages/Detalle";
 import { Carrito } from "./pages/Carrito";
 import { Login } from "./pages/Login";
 import { Registro } from "./pages/Registro";
+import { Checkout } from "./pages/checkout";
 
 function App() {
 	return (
@@ -33,6 +34,10 @@ function App() {
 				path="/registro"
 				element={<Registro />}
 			/>
+
+			<Route path="/carrito/checkout"
+			element= {<Checkout/>}>
+			</Route>
 		</Routes>
 	);
 }

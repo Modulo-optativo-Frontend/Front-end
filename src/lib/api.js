@@ -1,3 +1,4 @@
+import { getAuthToken } from "./auth";
 const apiUrlFromEnv = import.meta.env.VITE_API_URL
 	? import.meta.env.VITE_API_URL.replace(/\/$/, "")
 	: "http://localhost:3000";
@@ -34,6 +35,13 @@ export async function apiFetch(ruta, informacion) {
 		}
 	}
 	// Si hay token, añado Authorization
+	// Si auth=true, leo token del localStorage (authTok) automáticamente
+	if (informacion.auth) {
+		const t = getAuthToken();
+		if (t) cabeceras["Authorization"] = "Bearer " + t;
+	}
+
+	// Compatibilidad: si alguien pasa token manualmente, también funciona
 	if (informacion.token) {
 		cabeceras["Authorization"] = "Bearer " + informacion.token;
 	}

@@ -96,13 +96,18 @@ export function Carrito() {
 	if (!authToken) {
 		return (
 			<div className="flex min-h-screen flex-col bg-white">
-				<SiteHeader authToken={authToken} onLogout={handleLogout} />
+				<SiteHeader
+					authToken={authToken}
+					onLogout={handleLogout}
+				/>
 				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
 					<h1 className="text-3xl font-semibold text-black">Carrito</h1>
 					<p className="mt-3 text-sm text-(--color-gray)">
 						Necesitas iniciar sesión para ver tu carrito.
 					</p>
-					<Link to="/login" className="mt-4 inline-block text-sm text-(--color-blue)">
+					<Link
+						to="/login"
+						className="mt-4 inline-block text-sm text-(--color-blue)">
 						Ir a login
 					</Link>
 				</main>
@@ -114,7 +119,10 @@ export function Carrito() {
 	if (loadingCarrito) {
 		return (
 			<div className="flex min-h-screen flex-col bg-white">
-				<SiteHeader authToken={authToken} onLogout={handleLogout} />
+				<SiteHeader
+					authToken={authToken}
+					onLogout={handleLogout}
+				/>
 				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
 					<p className="text-sm text-(--color-gray)">Cargando carrito...</p>
 				</main>
@@ -126,7 +134,10 @@ export function Carrito() {
 	if (errorCarrito) {
 		return (
 			<div className="flex min-h-screen flex-col bg-white">
-				<SiteHeader authToken={authToken} onLogout={handleLogout} />
+				<SiteHeader
+					authToken={authToken}
+					onLogout={handleLogout}
+				/>
 				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
 					<p className="text-sm text-(--color-error)">{errorCarrito}</p>
 				</main>
@@ -138,24 +149,57 @@ export function Carrito() {
 	if (itemsCarrito.length === 0) {
 		return (
 			<div className="flex min-h-screen flex-col bg-white">
-				<SiteHeader authToken={authToken} onLogout={handleLogout} />
+				<SiteHeader
+					authToken={authToken}
+					onLogout={handleLogout}
+				/>
 				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
 					<h1 className="text-3xl font-semibold text-black">Carrito</h1>
-					<p className="mt-3 text-sm text-(--color-gray)">No tienes productos en el carrito.</p>
+					<p className="mt-3 text-sm text-(--color-gray)">
+						No tienes productos en el carrito.
+					</p>
 				</main>
 				<SiteFooter />
 			</div>
 		);
 	}
 
+	const hacerCheckout = async () => {
+		if (!authToken) {
+			navigate("/login");
+			return;
+		}
+
+		try {
+			const res = await apiFetch("/api/pedidos/checkout", {
+				method: "POST",
+				token: authToken,
+				body: {}, // o quítalo si tu apiFetch no lo necesita
+			});
+
+			console.log("Pedido creado:", res);
+
+			setItemsCarrito([]);
+
+			navigate("/checkout");
+		} catch (error) {
+			console.error("Error checkout:", error.message);
+			alert(error.message);
+		}
+	};
 	return (
 		<div className="flex min-h-screen flex-col bg-white">
-			<SiteHeader authToken={authToken} onLogout={handleLogout} />
+			<SiteHeader
+				authToken={authToken}
+				onLogout={handleLogout}
+			/>
 
 			<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
 				<div className="flex items-center justify-between">
 					<h1 className="text-3xl font-semibold text-black">Carrito</h1>
-					<Button variant="secondary" onClick={handleVaciarCarrito}>
+					<Button
+						variant="secondary"
+						onClick={handleVaciarCarrito}>
 						Vaciar carrito
 					</Button>
 				</div>
@@ -180,9 +224,13 @@ export function Carrito() {
 								</div>
 								<div className="flex items-center gap-3">
 									<p className="text-sm font-semibold text-black">
-										{formatPrice((productoCarrito.precio || 0) * cantidadProducto)}
+										{formatPrice(
+											(productoCarrito.precio || 0) * cantidadProducto,
+										)}
 									</p>
-									<Button variant="secondary" onClick={() => handleQuitarItem(productoId)}>
+									<Button
+										variant="secondary"
+										onClick={() => handleQuitarItem(productoId)}>
 										Quitar
 									</Button>
 								</div>
@@ -196,6 +244,11 @@ export function Carrito() {
 						Total: {formatPrice(totalCarrito)}
 					</p>
 				</div>
+
+				<Button
+					onClick={() => hacerCheckout()}
+					variant="primary"
+					children={"Completar pedido"}></Button>
 			</main>
 
 			<SiteFooter />
