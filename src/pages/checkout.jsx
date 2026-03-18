@@ -1,155 +1,787 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/Button";
-import { apiFetch } from "../lib/api";
+import { SiteHeader } from "../components/layout/SiteHeader.jsx";
+import { SiteFooter } from "../components/layout/SiteFooter.jsx";
+import { Button } from "../components/ui/Button.jsx";
+import { apiFetch } from "../lib/api.js";
+import { clearAuth, getAuthToken } from "../lib/auth.js";
 
-export function Checkout() {
-	const navigate = useNavigate();
-	const [pedido, setPedido] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState("");
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
-	useEffect(() => {
-		let cancelled = false;
+function formatPrice(precio) {
+	return new Intl.NumberFormat("es-ES", {
+		style: "currency",
+		currency: "EUR",
+	}).format(precio || 0);
+}
 
-		async function cargarUltimoPedido() {
-			setLoading(true);
-			setError("");
+function formatNumeroTarjeta(valor) {
+	const soloDigitos = valor.replace(/\D/g, "").slice(0, 16);
+	return soloDigitos.replace(/(.{4})/g, "$1 ").trim();
+}
 
-			try {
-				const respuesta = await apiFetch("/api/pedidos/mis-pedidos", {
-					method: "GET",
-					auth: true,
-				});
+function formatFechaExpiracion(valor) {
+	const soloDigitos = valor.replace(/\D/g, "").slice(0, 4);
+	if (soloDigitos.length >= 3) {
+		return soloDigitos.slice(0, 2) + "/" + soloDigitos.slice(2);
+	}
+	return soloDigitos;
+}
 
-				// Tu controller devuelve: { status: "success", data: pedidos }
-				const pedidos = respuesta?.data ?? respuesta;
+// ─── Datos estáticos ──────────────────────────────────────────────────────────
 
-				if (!Array.isArray(pedidos) || pedidos.length === 0) {
-					throw new Error("No hay pedidos para mostrar");
-				}
+const PUNTOS_RECOGIDA = [
+	{
+		id: "madrid-centro",
+		nombre: "SilverLine Madrid Centro",
+		direccion: "Calle Gran Vía, 48, Madrid",
+		horario: "Lun–Sáb 10:00–20:00",
+	},
+	{
+		id: "barcelona-gracia",
+		nombre: "SilverLine Barcelona Gràcia",
+		direccion: "Carrer de Verdi, 12, Barcelona",
+		horario: "Lun–Sáb 10:00–20:00",
+	},
+	{
+		id: "valencia-centro",
+		nombre: "SilverLine Valencia Centro",
+		direccion: "Calle Colón, 28, Valencia",
+		horario: "Lun–Sáb 10:00–20:00",
+	},
+];
 
-				// Asumimos que vienen ordenados por createdAt desc (si no, lo ordenas en backend)
-				const ultimo = pedidos[0];
+const PASOS_CHECKOUT = [
+	{ numero: 1, label: "Entrega" },
+	{ numero: 2, label: "Pago" },
+	{ numero: 3, label: "Resumen" },
+];
 
-				if (!cancelled) setPedido(ultimo);
-			} catch (e) {
-				if (!cancelled) setError(e.message || "Error cargando el pedido");
-			} finally {
-				if (!cancelled) setLoading(false);
-			}
-		}
+// ─── Indicador de pasos ───────────────────────────────────────────────────────
 
-		cargarUltimoPedido();
-		return () => {
-			cancelled = true;
-		};
-	}, []);
+function IndicadorPasos({ pasoActual }) {
+	return (
+		<div className="flex items-center justify-center">
+			{PASOS_CHECKOUT.map((paso, idx) => {
+				const esActual = paso.numero === pasoActual;
+				const esCompletado = paso.numero < pasoActual;
+				const esUltimo = idx === PASOS_CHECKOUT.length - 1;
 
-	if (loading) {
-		return (
-			<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-				<p>Cargando pedido...</p>
-			</main>
-		);
+				return (
+					<div
+						key={paso.numero}
+						className="flex items-center">
+						<div className="flex flex-col items-center gap-1">
+							<div
+								className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors
+									${esCompletado ? "border-black bg-black text-white" : esActual ? "border-(--color-blue) bg-(--color-blue) text-white" : "border-(--color-border) bg-white text-(--color-gray)"}`}>
+								{esCompletado ? "✓" : paso.numero}
+							</div>
+							<span
+								className={`text-xs ${esActual ? "font-semibold text-black" : "text-(--color-gray)"}`}>
+								{paso.label}
+							</span>
+						</div>
+						{!esUltimo && (
+							<div
+								className={`mx-3 mb-5 h-px w-10 ${esCompletado ? "bg-black" : "bg-(--color-border)"}`}
+							/>
+						)}
+					</div>
+				);
+			})}
+		</div>
+	);
+}
+
+// ─── Paso 1: Entrega ──────────────────────────────────────────────────────────
+
+function PasoEntrega({
+	metodoEntrega,
+	setMetodoEntrega,
+	direccionEnvio,
+	setDireccionEnvio,
+	puntoRecogidaSeleccionado,
+	setPuntoRecogidaSeleccionado,
+	errorEntrega,
+	onSiguiente,
+}) {
+	function handleCampoDireccion(campo, valor) {
+		setDireccionEnvio((prev) => ({ ...prev, [campo]: valor }));
 	}
 
-	if (error) {
-		return (
-			<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-				<p className="text-red-600">{error}</p>
-				<div className="mt-4">
-					<Button
-						variant="outline"
-						onClick={() => navigate("/")}>
-						Volver al inicio
-					</Button>
+	return (
+		<div className="space-y-6">
+			<h2 className="text-xl font-semibold text-black">Método de entrega</h2>
+
+			<div className="grid grid-cols-2 gap-3">
+				<button
+					type="button"
+					onClick={() => setMetodoEntrega("domicilio")}
+					className={`rounded-xl border-2 p-4 text-left transition
+						${metodoEntrega === "domicilio" ? "border-black bg-black text-white" : "border-(--color-border) bg-white text-black hover:border-(--color-gray)"}`}>
+					<span className="block text-sm font-semibold">
+						🏠 Envío a domicilio
+					</span>
+					<span className="mt-1 block text-xs opacity-70">
+						Recíbelo en tu casa
+					</span>
+				</button>
+				<button
+					type="button"
+					onClick={() => setMetodoEntrega("recogida")}
+					className={`rounded-xl border-2 p-4 text-left transition
+						${metodoEntrega === "recogida" ? "border-black bg-black text-white" : "border-(--color-border) bg-white text-black hover:border-(--color-gray)"}`}>
+					<span className="block text-sm font-semibold">
+						📦 Punto de recogida
+					</span>
+					<span className="mt-1 block text-xs opacity-70">
+						Recógelo en tienda
+					</span>
+				</button>
+			</div>
+
+			{metodoEntrega === "domicilio" && (
+				<div className="space-y-4">
+					<h3 className="text-sm font-semibold text-black">
+						Dirección de envío
+					</h3>
+
+					<div className="grid grid-cols-3 gap-3">
+						<div className="col-span-2">
+							<label className="mb-1 block text-xs text-(--color-gray-dark)">
+								Calle *
+							</label>
+							<input
+								type="text"
+								value={direccionEnvio.calle}
+								onChange={(e) => handleCampoDireccion("calle", e.target.value)}
+								placeholder="Calle Gran Vía"
+								className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							/>
+						</div>
+						<div>
+							<label className="mb-1 block text-xs text-(--color-gray-dark)">
+								Número
+							</label>
+							<input
+								type="text"
+								value={direccionEnvio.numero}
+								onChange={(e) => handleCampoDireccion("numero", e.target.value)}
+								placeholder="48"
+								className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							/>
+						</div>
+					</div>
+
+					<div>
+						<label className="mb-1 block text-xs text-(--color-gray-dark)">
+							Piso / Puerta
+						</label>
+						<input
+							type="text"
+							value={direccionEnvio.piso}
+							onChange={(e) => handleCampoDireccion("piso", e.target.value)}
+							placeholder="2ºA (opcional)"
+							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+						/>
+					</div>
+
+					<div className="grid grid-cols-2 gap-3">
+						<div>
+							<label className="mb-1 block text-xs text-(--color-gray-dark)">
+								Ciudad *
+							</label>
+							<input
+								type="text"
+								value={direccionEnvio.ciudad}
+								onChange={(e) => handleCampoDireccion("ciudad", e.target.value)}
+								placeholder="Madrid"
+								className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							/>
+						</div>
+						<div>
+							<label className="mb-1 block text-xs text-(--color-gray-dark)">
+								Código postal *
+							</label>
+							<input
+								type="text"
+								inputMode="numeric"
+								value={direccionEnvio.codigoPostal}
+								onChange={(e) =>
+									handleCampoDireccion(
+										"codigoPostal",
+										e.target.value.replace(/\D/g, "").slice(0, 5),
+									)
+								}
+								placeholder="28013"
+								className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							/>
+						</div>
+					</div>
 				</div>
-			</main>
-		);
+			)}
+
+			{metodoEntrega === "recogida" && (
+				<div className="space-y-3">
+					<h3 className="text-sm font-semibold text-black">
+						Selecciona un punto de recogida
+					</h3>
+					{PUNTOS_RECOGIDA.map((punto) => (
+						<button
+							key={punto.id}
+							type="button"
+							onClick={() => setPuntoRecogidaSeleccionado(punto.id)}
+							className={`w-full rounded-xl border-2 p-4 text-left transition
+								${puntoRecogidaSeleccionado === punto.id ? "border-black bg-gray-50" : "border-(--color-border) bg-white hover:border-(--color-gray)"}`}>
+							<p className="text-sm font-semibold text-black">{punto.nombre}</p>
+							<p className="text-xs text-(--color-gray)">{punto.direccion}</p>
+							<p className="mt-1 text-xs text-(--color-gray)">
+								{punto.horario}
+							</p>
+						</button>
+					))}
+				</div>
+			)}
+
+			{errorEntrega && (
+				<p className="text-sm text-(--color-error)">{errorEntrega}</p>
+			)}
+
+			<Button
+				onClick={onSiguiente}
+				className="w-full">
+				Continuar con el pago →
+			</Button>
+		</div>
+	);
+}
+
+// ─── Paso 2: Pago ─────────────────────────────────────────────────────────────
+
+function PasoPago({
+	datosTarjeta,
+	setDatosTarjeta,
+	errorPago,
+	onSiguiente,
+	onAnterior,
+}) {
+	function handleCampoTarjeta(campo, valor) {
+		setDatosTarjeta((prev) => ({ ...prev, [campo]: valor }));
 	}
 
+	const numeroTarjetaFormateado = formatNumeroTarjeta(
+		datosTarjeta.numeroTarjeta,
+	);
+
+	return (
+		<div className="space-y-6">
+			<h2 className="text-xl font-semibold text-black">Datos de pago</h2>
+
+			<div className="space-y-4">
+				<div>
+					<label className="mb-1 block text-xs text-(--color-gray-dark)">
+						Nombre en la tarjeta *
+					</label>
+					<input
+						type="text"
+						value={datosTarjeta.nombreTitular}
+						onChange={(e) =>
+							handleCampoTarjeta("nombreTitular", e.target.value)
+						}
+						placeholder="NOMBRE APELLIDO"
+						className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm uppercase"
+					/>
+				</div>
+
+				<div>
+					<label className="mb-1 block text-xs text-(--color-gray-dark)">
+						Número de tarjeta *
+					</label>
+					<input
+						type="text"
+						inputMode="numeric"
+						value={numeroTarjetaFormateado}
+						onChange={(e) =>
+							handleCampoTarjeta(
+								"numeroTarjeta",
+								e.target.value.replace(/\s/g, ""),
+							)
+						}
+						placeholder="0000 0000 0000 0000"
+						className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm font-mono tracking-widest"
+					/>
+				</div>
+
+				<div className="grid grid-cols-2 gap-3">
+					<div>
+						<label className="mb-1 block text-xs text-(--color-gray-dark)">
+							Fecha de expiración *
+						</label>
+						<input
+							type="text"
+							inputMode="numeric"
+							value={datosTarjeta.fechaExpiracion}
+							onChange={(e) =>
+								handleCampoTarjeta(
+									"fechaExpiracion",
+									formatFechaExpiracion(e.target.value),
+								)
+							}
+							placeholder="MM/AA"
+							maxLength={5}
+							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+						/>
+					</div>
+					<div>
+						<label className="mb-1 block text-xs text-(--color-gray-dark)">
+							CVV *
+						</label>
+						<input
+							type="password"
+							inputMode="numeric"
+							value={datosTarjeta.cvv}
+							onChange={(e) =>
+								handleCampoTarjeta(
+									"cvv",
+									e.target.value.replace(/\D/g, "").slice(0, 4),
+								)
+							}
+							placeholder="•••"
+							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+						/>
+					</div>
+				</div>
+			</div>
+
+			<p className="flex items-center gap-2 text-xs text-(--color-gray)">
+				Tus datos están protegidos con cifrado SSL
+			</p>
+
+			{errorPago && <p className="text-sm text-(--color-error)">{errorPago}</p>}
+
+			<div className="flex gap-3">
+				<Button
+					variant="secondary"
+					onClick={onAnterior}
+					className="flex-1">
+					Volver
+				</Button>
+				<Button
+					onClick={onSiguiente}
+					className="flex-1">
+					Ver resumen
+				</Button>
+			</div>
+		</div>
+	);
+}
+
+// ─── Paso 3: Resumen ──────────────────────────────────────────────────────────
+
+function PasoResumen({
+	itemsCarrito,
+	totalCarrito,
+	metodoEntrega,
+	direccionEnvio,
+	puntoRecogidaSeleccionado,
+	realizandoPedido,
+	errorCheckout,
+	onConfirmar,
+	onAnterior,
+}) {
+	const puntoRecogida = PUNTOS_RECOGIDA.find(
+		(p) => p.id === puntoRecogidaSeleccionado,
+	);
+
+	return (
+		<div className="space-y-6">
+			<h2 className="text-xl font-semibold text-black">Resumen del pedido</h2>
+
+			<div className="space-y-3 rounded-xl border border-(--color-border) p-4">
+				<h3 className="text-sm font-semibold text-black">Productos</h3>
+				{itemsCarrito.map((item, idx) => {
+					const producto = item.producto || {};
+					return (
+						<div
+							key={producto._id || idx}
+							className="flex justify-between text-sm">
+							<span className="text-black">
+								{producto.nombre || "Producto"} × {item.cantidad}
+							</span>
+							<span className="font-medium text-black">
+								{formatPrice((producto.precio || 0) * item.cantidad)}
+							</span>
+						</div>
+					);
+				})}
+				<div className="flex justify-between border-t border-(--color-border) pt-3">
+					<span className="font-semibold text-black">Total</span>
+					<span className="font-semibold text-black">
+						{formatPrice(totalCarrito)}
+					</span>
+				</div>
+			</div>
+
+			<div className="space-y-1 rounded-xl border border-(--color-border) p-4">
+				<h3 className="text-sm font-semibold text-black">Entrega</h3>
+				{metodoEntrega === "domicilio" ? (
+					<p className="text-sm text-(--color-gray)">
+						{direccionEnvio.calle} {direccionEnvio.numero}
+						{direccionEnvio.piso ? `, ${direccionEnvio.piso}` : ""},{" "}
+						{direccionEnvio.ciudad} {direccionEnvio.codigoPostal}
+					</p>
+				) : (
+					<p className="text-sm text-(--color-gray)">
+						{puntoRecogida?.nombre} — {puntoRecogida?.direccion}
+					</p>
+				)}
+			</div>
+
+			<div className="space-y-1 rounded-xl border border-(--color-border) p-4">
+				<h3 className="text-sm font-semibold text-black">Pago</h3>
+				<p className="text-sm text-(--color-gray)">
+					Tarjeta de crédito/débito •••• ••••
+				</p>
+			</div>
+
+			{errorCheckout && (
+				<p className="text-sm text-(--color-error)">{errorCheckout}</p>
+			)}
+
+			<div className="flex gap-3">
+				<Button
+					variant="secondary"
+					onClick={onAnterior}
+					className="flex-1">
+					← Volver
+				</Button>
+				<Button
+					onClick={onConfirmar}
+					disabled={realizandoPedido}
+					className="flex-1">
+					{realizandoPedido ? "Procesando..." : "Confirmar pedido"}
+				</Button>
+			</div>
+		</div>
+	);
+}
+
+// ─── Paso 4: Completado ───────────────────────────────────────────────────────
+
+function PasoCompletado({ pedido, onIrInicio }) {
 	const fecha = pedido?.createdAt
 		? new Date(pedido.createdAt).toLocaleDateString("es-ES")
 		: new Date().toLocaleDateString("es-ES");
 
-	const total =
-		typeof pedido?.total === "number" ? pedido.total.toFixed(2) : pedido?.total;
+	return (
+		<div className="space-y-6 text-center">
+			<div className="flex justify-center">
+				<div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+					<svg
+						className="h-8 w-8 text-green-600"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24">
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d="M5 13l4 4L19 7"
+						/>
+					</svg>
+				</div>
+			</div>
+
+			<div>
+				<h2 className="text-2xl font-semibold text-black">
+					¡Pedido confirmado!
+				</h2>
+				<p className="mt-1 text-sm text-(--color-gray)">
+					Recibirás una confirmación en tu email
+				</p>
+			</div>
+
+			<div className="space-y-2 rounded-xl border border-(--color-border) p-4 text-left">
+				<p className="text-sm">
+					<span className="font-medium">Número de pedido:</span>{" "}
+					{String(pedido?.orderId || pedido?._id || "")}
+				</p>
+				<p className="text-sm">
+					<span className="font-medium">Fecha:</span> {fecha}
+				</p>
+				{typeof pedido?.total === "number" && (
+					<p className="text-sm">
+						<span className="font-medium">Total:</span>{" "}
+						{formatPrice(pedido.total)}
+					</p>
+				)}
+			</div>
+
+			<Button
+				onClick={onIrInicio}
+				className="w-full">
+				Volver al inicio
+			</Button>
+		</div>
+	);
+}
+
+// ─── Componente principal ─────────────────────────────────────────────────────
+
+export function Checkout() {
+	const navigate = useNavigate();
+	const authToken = getAuthToken();
+
+	// Paso actual: 1 = entrega, 2 = pago, 3 = resumen, 4 = completado
+	const [pasoActual, setPasoActual] = useState(1);
+
+	// Items del carrito para el resumen y cálculo del total
+	const [itemsCarrito, setItemsCarrito] = useState([]);
+	const [loadingCarrito, setLoadingCarrito] = useState(true);
+	const [errorInicialCarrito, setErrorInicialCarrito] = useState("");
+
+	// Datos del paso 1 — entrega
+	const [metodoEntrega, setMetodoEntrega] = useState("domicilio");
+	const [direccionEnvio, setDireccionEnvio] = useState({
+		calle: "",
+		numero: "",
+		piso: "",
+		ciudad: "",
+		codigoPostal: "",
+	});
+	const [puntoRecogidaSeleccionado, setPuntoRecogidaSeleccionado] =
+		useState("");
+	const [errorEntrega, setErrorEntrega] = useState("");
+
+	// Datos del paso 2 — pago
+	const [datosTarjeta, setDatosTarjeta] = useState({
+		nombreTitular: "",
+		numeroTarjeta: "",
+		fechaExpiracion: "",
+		cvv: "",
+	});
+	const [errorPago, setErrorPago] = useState("");
+
+	// Estado del paso 3 — confirmación
+	const [realizandoPedido, setRealizandoPedido] = useState(false);
+	const [errorCheckout, setErrorCheckout] = useState("");
+	const [pedidoCompletado, setPedidoCompletado] = useState(null);
+
+	// Cargamos el carrito al montar para mostrarlo en el resumen
+	useEffect(() => {
+		if (!authToken) {
+			navigate("/login");
+			return;
+		}
+
+		async function cargarCarrito() {
+			try {
+				const respuesta = await apiFetch("/api/carrito", { token: authToken });
+				const items = respuesta.items || [];
+				if (items.length === 0) {
+					navigate("/carrito");
+					return;
+				}
+				setItemsCarrito(items);
+			} catch (error) {
+				setErrorInicialCarrito(error.message || "No se pudo cargar el carrito");
+			} finally {
+				setLoadingCarrito(false);
+			}
+		}
+
+		cargarCarrito();
+	}, [authToken, navigate]);
+
+	const totalCarrito = itemsCarrito.reduce((total, item) => {
+		return total + (item.producto?.precio || 0) * (item.cantidad || 0);
+	}, 0);
+
+	// ── Validaciones por paso ───────────────────────────────────────────────
+
+	function validarEntrega() {
+		if (metodoEntrega === "domicilio") {
+			if (
+				!direccionEnvio.calle ||
+				!direccionEnvio.ciudad ||
+				!direccionEnvio.codigoPostal
+			) {
+				setErrorEntrega("Calle, ciudad y código postal son obligatorios");
+				return false;
+			}
+		} else {
+			if (!puntoRecogidaSeleccionado) {
+				setErrorEntrega("Selecciona un punto de recogida");
+				return false;
+			}
+		}
+		setErrorEntrega("");
+		return true;
+	}
+
+	function validarPago() {
+		const { nombreTitular, numeroTarjeta, fechaExpiracion, cvv } = datosTarjeta;
+		if (!nombreTitular || !numeroTarjeta || !fechaExpiracion || !cvv) {
+			setErrorPago("Todos los campos de pago son obligatorios");
+			return false;
+		}
+		if (numeroTarjeta.replace(/\s/g, "").length < 16) {
+			setErrorPago("El número de tarjeta debe tener 16 dígitos");
+			return false;
+		}
+		if (cvv.length < 3) {
+			setErrorPago("El CVV debe tener al menos 3 dígitos");
+			return false;
+		}
+		setErrorPago("");
+		return true;
+	}
+
+	function irAlSiguientePaso() {
+		if (pasoActual === 1 && validarEntrega()) setPasoActual(2);
+		if (pasoActual === 2 && validarPago()) setPasoActual(3);
+	}
+
+	function irAlPasoAnterior() {
+		if (pasoActual > 1) setPasoActual(pasoActual - 1);
+	}
+
+	async function confirmarPedido() {
+		setRealizandoPedido(true);
+		setErrorCheckout("");
+
+		try {
+			const bodyPedido =
+				metodoEntrega === "domicilio"
+					? { metodoEntrega, direccion: direccionEnvio }
+					: { metodoEntrega, puntoRecogida: puntoRecogidaSeleccionado };
+
+			const respuesta = await apiFetch("/api/pedidos/checkout", {
+				method: "POST",
+				token: authToken,
+				body: bodyPedido,
+			});
+
+			const pedido = respuesta?.data ?? respuesta;
+			setPedidoCompletado(pedido);
+			setPasoActual(4);
+		} catch (error) {
+			setErrorCheckout(error.message || "No se pudo procesar el pedido");
+		} finally {
+			setRealizandoPedido(false);
+		}
+	}
+
+	function handleLogout() {
+		clearAuth();
+		navigate("/");
+	}
+
+	// ── Renders condicionales ───────────────────────────────────────────────
+
+	if (!authToken) return null;
+
+	if (loadingCarrito) {
+		return (
+			<div className="flex min-h-screen flex-col bg-white">
+				<SiteHeader
+					authToken={authToken}
+					onLogout={handleLogout}
+				/>
+				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
+					<p className="text-sm text-(--color-gray)">Cargando carrito...</p>
+				</main>
+				<SiteFooter />
+			</div>
+		);
+	}
+
+	if (errorInicialCarrito) {
+		return (
+			<div className="flex min-h-screen flex-col bg-white">
+				<SiteHeader
+					authToken={authToken}
+					onLogout={handleLogout}
+				/>
+				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
+					<p className="text-sm text-(--color-error)">{errorInicialCarrito}</p>
+					<Button
+						variant="secondary"
+						onClick={() => navigate("/carrito")}
+						className="mt-4">
+						Volver al carrito
+					</Button>
+				</main>
+				<SiteFooter />
+			</div>
+		);
+	}
 
 	return (
-		<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-			<section className="space-y-8">
-				<div className="text-center">
-					<div className="mb-4 flex justify-center">
-						<div className="rounded-full bg-green-100 p-4">
-							<svg
-								className="h-8 w-8 text-green-600"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24">
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth={2}
-									d="M5 13l4 4L19 7"
-								/>
-							</svg>
-						</div>
+		<div className="flex min-h-screen flex-col bg-white">
+			<SiteHeader
+				authToken={authToken}
+				onLogout={handleLogout}
+			/>
+
+			<main className="mx-auto w-full max-w-lg flex-1 px-4 py-10">
+				<h1 className="mb-8 text-3xl font-semibold text-black">Checkout</h1>
+
+				{pasoActual < 4 && (
+					<div className="mb-8">
+						<IndicadorPasos pasoActual={pasoActual} />
 					</div>
+				)}
 
-					<h1 className="text-3xl font-bold text-gray-900">
-						¡Pedido completado!
-					</h1>
-					<p className="mt-2 text-gray-600">Gracias por tu compra</p>
-				</div>
+				<div className="rounded-2xl border border-(--color-border) bg-white p-6">
+					{pasoActual === 1 && (
+						<PasoEntrega
+							metodoEntrega={metodoEntrega}
+							setMetodoEntrega={setMetodoEntrega}
+							direccionEnvio={direccionEnvio}
+							setDireccionEnvio={setDireccionEnvio}
+							puntoRecogidaSeleccionado={puntoRecogidaSeleccionado}
+							setPuntoRecogidaSeleccionado={setPuntoRecogidaSeleccionado}
+							errorEntrega={errorEntrega}
+							onSiguiente={irAlSiguientePaso}
+						/>
+					)}
 
-				<div className="rounded-lg bg-gray-50 p-6">
-					<h2 className="text-lg font-semibold text-gray-900">
-						Detalles del pedido
-					</h2>
+					{pasoActual === 2 && (
+						<PasoPago
+							datosTarjeta={datosTarjeta}
+							setDatosTarjeta={setDatosTarjeta}
+							errorPago={errorPago}
+							onSiguiente={irAlSiguientePaso}
+							onAnterior={irAlPasoAnterior}
+						/>
+					)}
 
-					<div className="mt-4 space-y-2 text-sm text-gray-600">
-						<p>
-							<span className="font-medium">Número de pedido:</span> #
-							{String(pedido?._id).slice(-6)}
-						</p>
+					{pasoActual === 3 && (
+						<PasoResumen
+							itemsCarrito={itemsCarrito}
+							totalCarrito={totalCarrito}
+							metodoEntrega={metodoEntrega}
+							direccionEnvio={direccionEnvio}
+							puntoRecogidaSeleccionado={puntoRecogidaSeleccionado}
+							realizandoPedido={realizandoPedido}
+							errorCheckout={errorCheckout}
+							onConfirmar={confirmarPedido}
+							onAnterior={irAlPasoAnterior}
+						/>
+					)}
 
-						<p>
-							<span className="font-medium">Fecha:</span> {fecha}
-						</p>
-
-						<p>
-							<span className="font-medium">Total:</span> {total} €
-						</p>
-					</div>
-
-					{/* Opcional: lista de items */}
-					{Array.isArray(pedido?.items) && pedido.items.length > 0 && (
-						<div className="mt-6 space-y-2">
-							<h3 className="text-sm font-semibold text-gray-900">Productos</h3>
-							{pedido.items.map((it, idx) => (
-								<div
-									key={it.producto?._id || idx}
-									className="flex justify-between text-sm text-gray-700">
-									<span>{it.producto?.nombre || "Producto"}</span>
-									<span>{it.precioUnitario} €</span>
-								</div>
-							))}
-						</div>
+					{pasoActual === 4 && (
+						<PasoCompletado
+							pedido={pedidoCompletado}
+							onIrInicio={() => navigate("/")}
+						/>
 					)}
 				</div>
+			</main>
 
-				<div className="flex justify-center gap-4">
-					<Button
-						variant="outline"
-						onClick={() => navigate("/")}>
-						Volver al inicio
-					</Button>
-					<Button onClick={() => navigate("/mis-pedidos")}>
-						Ver mis pedidos
-					</Button>
-				</div>
-			</section>
-		</main>
+			<SiteFooter />
+		</div>
 	);
 }

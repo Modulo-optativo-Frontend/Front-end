@@ -35,9 +35,10 @@ function App() {
 				element={<Registro />}
 			/>
 
-			<Route path="/carrito/checkout"
-			element= {<Checkout/>}>
-			</Route>
+			<Route
+				path="/checkout"
+				element={<Checkout />}
+			/>
 		</Routes>
 	);
 }

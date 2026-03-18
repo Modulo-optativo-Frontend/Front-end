@@ -164,29 +164,13 @@ export function Carrito() {
 		);
 	}
 
-	const hacerCheckout = async () => {
+	function irAlCheckout() {
 		if (!authToken) {
 			navigate("/login");
 			return;
 		}
-
-		try {
-			const res = await apiFetch("/api/pedidos/checkout", {
-				method: "POST",
-				token: authToken,
-				body: {}, // o quítalo si tu apiFetch no lo necesita
-			});
-
-			console.log("Pedido creado:", res);
-
-			setItemsCarrito([]);
-
-			navigate("/checkout");
-		} catch (error) {
-			console.error("Error checkout:", error.message);
-			alert(error.message);
-		}
-	};
+		navigate("/checkout");
+	}
 	return (
 		<div className="flex min-h-screen flex-col bg-white">
 			<SiteHeader
@@ -246,9 +230,10 @@ export function Carrito() {
 				</div>
 
 				<Button
-					onClick={() => hacerCheckout()}
+					onClick={irAlCheckout}
 					variant="primary"
-					children={"Completar pedido"}></Button>
+					children={"Completar pedido"}
+				/>
 			</main>
 
 			<SiteFooter />
