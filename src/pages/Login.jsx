@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button.jsx";
 import { apiFetch } from "../lib/api.js";
-import {
-	getAuthToken,
-	setAuthToken,
-	setAuthUser,
-} from "../lib/auth.js";
+import { getAuthToken, setAuthToken, setAuthUser } from "../lib/auth.js";
 
 export function Login() {
 	const navigate = useNavigate();
@@ -55,65 +51,73 @@ export function Login() {
 	}
 
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-white px-4">
-			<div className="w-full max-w-md rounded-2xl border border-(--color-border) bg-white p-8">
-				<h1 className="text-2xl font-semibold text-black">
-					Iniciar sesión
-				</h1>
+		<div className="font-mono flex min-h-screen items-center justify-center bg-white px-4">
+			<div className="w-full max-w-md border border-black bg-white">
+				{/* HEADER */}
+				<div className="border-b border-black p-3">
+					<p className="text-xs font-bold uppercase">
+						000100 LOGIN-ACCESS-DIVISION
+					</p>
+					<p className="text-xs font-bold uppercase">
+						000200 MODULE: USER-AUTH-INPUT........... STATUS: ACTIVE
+					</p>
+				</div>
 
 				<form
 					onSubmit={handleLoginSubmit}
-					className="mt-6 space-y-4">
-					<div>
-						<label className="mb-2 block text-sm text-(--color-gray-dark)">
-							Email
+					className="p-6">
+					{/* EMAIL */}
+					<div className="mb-4">
+						<label className="mb-1 block text-xs font-bold uppercase">
+							FIELD: EMAIL-ADDRESS
 						</label>
 						<input
 							type="email"
 							value={emailUsuario}
-							onChange={(event) =>
-								setEmailUsuario(event.target.value)
-							}
-							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							onChange={(event) => setEmailUsuario(event.target.value)}
+							className="w-full border border-black bg-white px-3 py-2 font-mono text-xs uppercase focus:outline-none focus:bg-[#f2f2f2]"
 						/>
 					</div>
 
-					<div>
-						<label className="mb-2 block text-sm text-(--color-gray-dark)">
-							Contraseña
+					{/* PASSWORD */}
+					<div className="mb-4">
+						<label className="mb-1 block text-xs font-bold uppercase">
+							FIELD: PASSWORD-DATA
 						</label>
 						<input
 							type="password"
 							value={passwordUsuario}
-							onChange={(event) =>
-								setPasswordUsuario(event.target.value)
-							}
-							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							onChange={(event) => setPasswordUsuario(event.target.value)}
+							className="w-full border border-black bg-white px-3 py-2 font-mono text-xs focus:outline-none focus:bg-[#f2f2f2]"
 						/>
 					</div>
 
 					{errorLogin ? (
-						<p className="text-sm text-(--color-error)">
-							{errorLogin}
-						</p>
+						<div className="mb-4 border border-dashed border-black p-2">
+							<p className="text-xs font-bold uppercase">
+								[!] FAULT: {errorLogin}
+							</p>
+						</div>
 					) : null}
 
 					<Button
 						type="submit"
 						disabled={isSubmitting}
 						className="w-full">
-						{isSubmitting ? "Accediendo..." : "Iniciar sesión"}
+						{isSubmitting ? "[ ] PROCESANDO..." : "[>] INICIAR-SESION"}
 					</Button>
 				</form>
 
-				<p className="mt-6 text-sm text-(--color-gray)">
-					¿No tienes cuenta?{" "}
-					<Link
-						to="/registro"
-						className="text-(--color-blue)">
-						Regístrate
-					</Link>
-				</p>
+				<div className="border-t border-dashed border-black px-6 py-3">
+					<p className="text-xs uppercase">
+						[?] SIN-CUENTA &gt;{" "}
+						<Link
+							to="/registro"
+							className="font-bold underline">
+							REGISTRATE
+						</Link>
+					</p>
+				</div>
 			</div>
 		</div>
 	);

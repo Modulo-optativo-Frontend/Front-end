@@ -2,13 +2,16 @@ import { ProductCard } from "./ProductCard.jsx";
 
 export function ProductGrid({ productos, onAddToCart }) {
 	return (
-		<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+		<div className="border border-(--color-border) grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
 			{productos.map((productoActual) => (
-				<ProductCard
+				<div
 					key={productoActual._id}
-					producto={productoActual}
-					onAddToCart={onAddToCart}
-				/>
+					className="-mt-px -ml-px">
+					<ProductCard
+						producto={productoActual}
+						onAddToCart={onAddToCart}
+					/>
+				</div>
 			))}
 		</div>
 	);

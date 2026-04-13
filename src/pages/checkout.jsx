@@ -61,7 +61,7 @@ const PASOS_CHECKOUT = [
 
 function IndicadorPasos({ pasoActual }) {
 	return (
-		<div className="flex items-center justify-center">
+		<div className="font-mono flex items-center border border-(--color-border)">
 			{PASOS_CHECKOUT.map((paso, idx) => {
 				const esActual = paso.numero === pasoActual;
 				const esCompletado = paso.numero < pasoActual;
@@ -70,23 +70,9 @@ function IndicadorPasos({ pasoActual }) {
 				return (
 					<div
 						key={paso.numero}
-						className="flex items-center">
-						<div className="flex flex-col items-center gap-1">
-							<div
-								className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors
-									${esCompletado ? "border-black bg-black text-white" : esActual ? "border-(--color-blue) bg-(--color-blue) text-white" : "border-(--color-border) bg-white text-(--color-gray)"}`}>
-								{esCompletado ? "✓" : paso.numero}
-							</div>
-							<span
-								className={`text-xs ${esActual ? "font-semibold text-black" : "text-(--color-gray)"}`}>
-								{paso.label}
-							</span>
-						</div>
-						{!esUltimo && (
-							<div
-								className={`mx-3 mb-5 h-px w-10 ${esCompletado ? "bg-black" : "bg-(--color-border)"}`}
-							/>
-						)}
+						className={`flex flex-1 items-center justify-center gap-2 px-4 py-2 text-xs font-bold uppercase ${esUltimo ? "" : "border-r border-(--color-border)"} ${esCompletado ? "bg-(--color-black) text-(--color-white)" : esActual ? "bg-(--color-gray-light) text-(--color-black)" : "bg-(--color-surface) text-(--color-gray)"}`}>
+						<span>{esCompletado ? "[OK]" : `[${paso.numero}]`}</span>
+						<span>{paso.label.toUpperCase()}</span>
 					</div>
 				);
 			})}
@@ -111,98 +97,88 @@ function PasoEntrega({
 	}
 
 	return (
-		<div className="space-y-6">
-			<h2 className="text-xl font-semibold text-black">Método de entrega</h2>
+		<div className="font-mono space-y-0">
+			<div className="border-b border-(--color-border) p-3">
+				<p className="text-xs font-bold uppercase">
+					000500 DELIVERY-INPUT-SECTION
+				</p>
+			</div>
 
-			<div className="grid grid-cols-2 gap-3">
+			{/* METHOD SELECTOR */}
+			<div className="flex border-b border-(--color-border)">
 				<button
 					type="button"
 					onClick={() => setMetodoEntrega("domicilio")}
-					className={`rounded-xl border-2 p-4 text-left transition
-						${metodoEntrega === "domicilio" ? "border-black bg-black text-white" : "border-(--color-border) bg-white text-black hover:border-(--color-gray)"}`}>
-					<span className="block text-sm font-semibold">
-						🏠 Envío a domicilio
-					</span>
-					<span className="mt-1 block text-xs opacity-70">
-						Recíbelo en tu casa
-					</span>
+					className={`flex-1 border-r border-(--color-border) px-4 py-3 text-left text-xs font-bold uppercase ${metodoEntrega === "domicilio" ? "bg-(--color-black) text-(--color-white)" : "bg-(--color-surface) text-(--color-black) hover:bg-(--color-gray-light)"}`}>
+					[H] ENVIO-A-DOMICILIO
 				</button>
 				<button
 					type="button"
 					onClick={() => setMetodoEntrega("recogida")}
-					className={`rounded-xl border-2 p-4 text-left transition
-						${metodoEntrega === "recogida" ? "border-black bg-black text-white" : "border-(--color-border) bg-white text-black hover:border-(--color-gray)"}`}>
-					<span className="block text-sm font-semibold">
-						📦 Punto de recogida
-					</span>
-					<span className="mt-1 block text-xs opacity-70">
-						Recógelo en tienda
-					</span>
+					className={`flex-1 px-4 py-3 text-left text-xs font-bold uppercase ${metodoEntrega === "recogida" ? "bg-(--color-black) text-(--color-white)" : "bg-(--color-surface) text-(--color-black) hover:bg-(--color-gray-light)"}`}>
+					[P] PUNTO-DE-RECOGIDA
 				</button>
 			</div>
 
 			{metodoEntrega === "domicilio" && (
-				<div className="space-y-4">
-					<h3 className="text-sm font-semibold text-black">
-						Dirección de envío
-					</h3>
-
-					<div className="grid grid-cols-3 gap-3">
+				<div className="border-b border-(--color-border) p-4 space-y-3">
+					<p className="text-xs font-bold uppercase">
+						FIELD-GROUP: DIRECCION-ENVIO
+					</p>
+					<div className="grid grid-cols-3 gap-2">
 						<div className="col-span-2">
-							<label className="mb-1 block text-xs text-(--color-gray-dark)">
-								Calle *
+							<label className="mb-1 block text-[10px] font-bold uppercase">
+								CALLE *
 							</label>
 							<input
 								type="text"
 								value={direccionEnvio.calle}
 								onChange={(e) => handleCampoDireccion("calle", e.target.value)}
-								placeholder="Calle Gran Vía"
-								className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+								placeholder="CALLE GRAN VIA"
+								className="w-full border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-xs uppercase focus:outline-none focus:bg-(--color-gray-light)"
 							/>
 						</div>
 						<div>
-							<label className="mb-1 block text-xs text-(--color-gray-dark)">
-								Número
+							<label className="mb-1 block text-[10px] font-bold uppercase">
+								NUMERO
 							</label>
 							<input
 								type="text"
 								value={direccionEnvio.numero}
 								onChange={(e) => handleCampoDireccion("numero", e.target.value)}
 								placeholder="48"
-								className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+								className="w-full border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-xs uppercase focus:outline-none focus:bg-(--color-gray-light)"
 							/>
 						</div>
 					</div>
-
 					<div>
-						<label className="mb-1 block text-xs text-(--color-gray-dark)">
-							Piso / Puerta
+						<label className="mb-1 block text-[10px] font-bold uppercase">
+							PISO/PUERTA
 						</label>
 						<input
 							type="text"
 							value={direccionEnvio.piso}
 							onChange={(e) => handleCampoDireccion("piso", e.target.value)}
-							placeholder="2ºA (opcional)"
-							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							placeholder="2A (OPCIONAL)"
+							className="w-full border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-xs uppercase focus:outline-none focus:bg-(--color-gray-light)"
 						/>
 					</div>
-
-					<div className="grid grid-cols-2 gap-3">
+					<div className="grid grid-cols-2 gap-2">
 						<div>
-							<label className="mb-1 block text-xs text-(--color-gray-dark)">
-								Ciudad *
+							<label className="mb-1 block text-[10px] font-bold uppercase">
+								CIUDAD *
 							</label>
 							<input
 								type="text"
 								value={direccionEnvio.ciudad}
 								onChange={(e) => handleCampoDireccion("ciudad", e.target.value)}
-								placeholder="Madrid"
-								className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+								placeholder="MADRID"
+								className="w-full border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-xs uppercase focus:outline-none focus:bg-(--color-gray-light)"
 							/>
 						</div>
 						<div>
-							<label className="mb-1 block text-xs text-(--color-gray-dark)">
-								Código postal *
+							<label className="mb-1 block text-[10px] font-bold uppercase">
+								COD-POSTAL *
 							</label>
 							<input
 								type="text"
@@ -215,7 +191,7 @@ function PasoEntrega({
 									)
 								}
 								placeholder="28013"
-								className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+								className="w-full border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-xs focus:outline-none focus:bg-(--color-gray-light)"
 							/>
 						</div>
 					</div>
@@ -223,36 +199,39 @@ function PasoEntrega({
 			)}
 
 			{metodoEntrega === "recogida" && (
-				<div className="space-y-3">
-					<h3 className="text-sm font-semibold text-black">
-						Selecciona un punto de recogida
-					</h3>
+				<div className="border-b border-(--color-border) p-4 space-y-2">
+					<p className="text-xs font-bold uppercase">
+						FIELD-GROUP: PUNTO-RECOGIDA-SELECTOR
+					</p>
 					{PUNTOS_RECOGIDA.map((punto) => (
 						<button
 							key={punto.id}
 							type="button"
 							onClick={() => setPuntoRecogidaSeleccionado(punto.id)}
-							className={`w-full rounded-xl border-2 p-4 text-left transition
-								${puntoRecogidaSeleccionado === punto.id ? "border-black bg-gray-50" : "border-(--color-border) bg-white hover:border-(--color-gray)"}`}>
-							<p className="text-sm font-semibold text-black">{punto.nombre}</p>
-							<p className="text-xs text-(--color-gray)">{punto.direccion}</p>
-							<p className="mt-1 text-xs text-(--color-gray)">
-								{punto.horario}
-							</p>
+							className={`w-full border p-3 text-left text-xs uppercase ${puntoRecogidaSeleccionado === punto.id ? "border-(--color-border) bg-(--color-black) text-(--color-white)" : "border-(--color-border) bg-(--color-surface) text-(--color-black) hover:bg-(--color-gray-light)"}`}>
+							<p className="font-bold">[*] {punto.nombre}</p>
+							<p className="opacity-80">{punto.direccion}</p>
+							<p className="opacity-60">{punto.horario}</p>
 						</button>
 					))}
 				</div>
 			)}
 
 			{errorEntrega && (
-				<p className="text-sm text-(--color-error)">{errorEntrega}</p>
+				<div className="border-b border-dashed border-(--color-border) p-3">
+					<p className="text-xs font-bold uppercase">
+						[!] FAULT: {errorEntrega}
+					</p>
+				</div>
 			)}
 
-			<Button
-				onClick={onSiguiente}
-				className="w-full">
-				Continuar con el pago →
-			</Button>
+			<div className="p-4">
+				<Button
+					onClick={onSiguiente}
+					className="w-full">
+					[&gt;] CONTINUAR-CON-EL-PAGO
+				</Button>
+			</div>
 		</div>
 	);
 }

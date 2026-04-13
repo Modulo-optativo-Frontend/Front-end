@@ -68,10 +68,21 @@ export function Detalle() {
 
 	if (loadingProducto) {
 		return (
-			<div className="flex min-h-screen flex-col bg-white">
-				<SiteHeader authToken={authToken} onLogout={handleLogout} />
-				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-					<p className="text-sm text-(--color-gray)">Cargando producto...</p>
+			<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
+				<SiteHeader
+					authToken={authToken}
+					onLogout={handleLogout}
+				/>
+				<main className="flex-1 p-4">
+					<div className="border border-(--color-border) p-4">
+						<p className="text-xs font-bold uppercase">
+							000100 SYSTEM-PROCESS-DIVISION
+						</p>
+						<div className="my-2 border-t border-dashed border-(--color-border)" />
+						<p className="text-xs">
+							[ ] LOADING PRODUCT-RECORD.................................
+						</p>
+					</div>
 				</main>
 				<SiteFooter />
 			</div>
@@ -80,15 +91,27 @@ export function Detalle() {
 
 	if (errorProducto || !productoDetalle) {
 		return (
-			<div className="flex min-h-screen flex-col bg-white">
-				<SiteHeader authToken={authToken} onLogout={handleLogout} />
-				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-					<p className="text-sm text-(--color-error)">
-						{errorProducto || "Producto no encontrado"}
-					</p>
-					<Link to="/catalogo" className="mt-4 inline-block text-sm text-(--color-blue)">
-						Volver al catálogo
-					</Link>
+			<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
+				<SiteHeader
+					authToken={authToken}
+					onLogout={handleLogout}
+				/>
+				<main className="flex-1 p-4">
+					<div className="border border-(--color-border) p-4">
+						<p className="text-xs font-bold uppercase">
+							000100 EXCEPTION-HANDLER-DIVISION
+						</p>
+						<div className="my-2 border-t border-dashed border-(--color-border)" />
+						<p className="text-xs font-bold">
+							[!] FAULT: {errorProducto || "PRODUCT-RECORD NOT FOUND"}
+						</p>
+						<div className="my-2 border-t border-dashed border-(--color-border)" />
+						<Link
+							to="/catalogo"
+							className="text-xs font-bold uppercase underline">
+							[&lt;] RETURN-TO-CATALOG-INDEX
+						</Link>
+					</div>
 				</main>
 				<SiteFooter />
 			</div>
@@ -98,50 +121,165 @@ export function Detalle() {
 	const imagenProducto = getProductoImageUrl(productoDetalle);
 
 	return (
-		<div className="flex min-h-screen flex-col bg-white">
-			<SiteHeader authToken={authToken} onLogout={handleLogout} />
+		<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
+			<SiteHeader
+				authToken={authToken}
+				onLogout={handleLogout}
+			/>
 
-			<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-				<Link to="/catalogo" className="text-sm text-(--color-blue)">
-					← Volver
-				</Link>
+			<main className="flex-1 p-4">
+				{/* 000100 IDENTIFICATION-DIVISION */}
+				<div className="border border-(--color-border) p-2">
+					<p className="text-xs font-bold uppercase">
+						000100 IDENTIFICATION-DIVISION
+					</p>
+					<p className="text-xs font-bold uppercase">
+						000200 PRODUCT-DETAIL-MODULE........................ V1.0
+					</p>
+				</div>
 
-				<div className="mt-6 grid gap-8 rounded-2xl border border-(--color-border) bg-white p-6 md:grid-cols-2">
-					<div className="relative overflow-hidden rounded-xl bg-(--color-gray-light)" style={{ aspectRatio: "4/3" }}>
-						{imagenProducto ? (
-							<img
-								src={imagenProducto}
-								alt={productoDetalle.nombre}
-								className="absolute inset-0 h-full w-full object-cover"
+				{/* 000300 NAV-CONTROL-SECTION */}
+				<div className="-mt-px border border-(--color-border) px-4 py-2 flex items-center justify-between">
+					<Link
+						to="/catalogo"
+						className="text-xs font-bold uppercase">
+						[&lt;] RETURN-TO-CATALOG-INDEX
+					</Link>
+					<span className="text-xs">REF: PROD-{id}</span>
+				</div>
+
+				{/* 000400 MAIN-DATA-GRID */}
+				<div className="-mt-px flex border border-(--color-border)">
+					{/* 000500 IMAGE-DATA-SECTION */}
+					<div className="w-1/2 border-r border-(--color-border) flex flex-col">
+						<div className="border-b border-(--color-border) p-2">
+							<p className="text-xs font-bold uppercase">
+								000500 IMAGE-DATA-SECTION
+							</p>
+						</div>
+						<div
+							className="relative flex-1 bg-(--color-gray-light)"
+							style={{ aspectRatio: "4/3" }}>
+							{imagenProducto ? (
+								<img
+									src={imagenProducto}
+									alt={productoDetalle.nombre}
+									className="absolute inset-0 h-full w-full object-cover"
+								/>
+							) : (
+								<div className="flex h-full items-center justify-center text-xs uppercase tracking-widest">
+									[NO-IMAGE-DATA]
+								</div>
+							)}
+						</div>
+					</div>
+
+					{/* 000600 PRODUCT-DATA-SECTION */}
+					<div className="flex w-1/2 flex-col">
+						<div className="border-b border-(--color-border) p-2">
+							<p className="text-xs font-bold uppercase">
+								000600 PRODUCT-DATA-SECTION
+							</p>
+						</div>
+
+						{/* NOMBRE */}
+						<div className="border-b border-dashed border-(--color-border) p-4">
+							<p className="text-xs uppercase text-(--color-gray)">
+								FIELD: NOMBRE-COMERCIAL
+							</p>
+							<p className="mt-1 text-base font-bold uppercase leading-tight">
+								{productoDetalle.nombre}
+							</p>
+						</div>
+
+						{/* DESCRIPCION */}
+						<div className="border-b border-dashed border-(--color-border) p-4">
+							<p className="text-xs uppercase text-(--color-gray)">
+								FIELD: DESCRIPCION-PRODUCTO
+							</p>
+							<p className="mt-1 text-xs leading-relaxed">
+								{productoDetalle.descripcion || "-- SIN DESCRIPCION --"}
+							</p>
+						</div>
+
+						{/* MODELO + PRECIO */}
+						<div className="border-b border-dashed border-(--color-border) flex">
+							<div className="w-1/2 border-r border-dashed border-(--color-border) p-4">
+								<p className="text-xs uppercase text-(--color-gray)">MODELO</p>
+								<p className="mt-1 text-xs font-bold">
+									{productoDetalle.modelo || "---"}
+								</p>
+							</div>
+							<div className="w-1/2 p-4 flex flex-col">
+								<p className="text-xs uppercase text-(--color-gray)">
+									PRECIO-UNIT
+								</p>
+								<p className="mt-1 text-right text-xl font-bold">
+									{new Intl.NumberFormat("es-ES", {
+										style: "currency",
+										currency: "EUR",
+									}).format(productoDetalle.precio || 0)}
+								</p>
+							</div>
+						</div>
+
+						{/* STOCK STATUS */}
+						<div className="border-b border-dashed border-(--color-border) p-4">
+							<p className="text-xs uppercase text-(--color-gray)">
+								STATUS: INVENTARIO-CONTROL
+							</p>
+							<p className="mt-1 text-xs font-bold uppercase">
+								{productoDetalle.enStock
+									? "[*] EN-STOCK............. DISPONIBLE"
+									: "[X] SIN-STOCK............ AGOTADO"}
+							</p>
+						</div>
+
+						{/* 000700 CART-ACTION-SECTION */}
+						<div className="p-4 flex-1 flex flex-col justify-end">
+							<p className="mb-2 text-xs font-bold uppercase">
+								000700 CART-ACTION-SECTION
+							</p>
+							<Button
+								onClick={handleAddToCart}
+								disabled={!productoDetalle.enStock}
+								className="w-full !rounded-none !bg-(--color-accent) !text-(--color-white) font-mono text-xs font-bold uppercase hover:!bg-(--color-highlight) hover:!text-(--color-black) border border-(--color-border) !transition-none">
+								{productoDetalle.enStock
+									? "[+] ADD-TO-CART"
+									: "[X] OUT-OF-STOCK"}
+							</Button>
+							{mensajeCarrito ? (
+								<p className="mt-2 border border-dashed border-(--color-border) p-2 text-xs uppercase">
+									[MSG]&gt; {mensajeCarrito}
+								</p>
+							) : null}
+						</div>
+					</div>
+				</div>
+
+				{/* 000900 END-OF-RECORD */}
+				<div className="-mt-px border border-(--color-border) p-2">
+					<p className="text-xs font-bold uppercase">
+						000900 END-OF-RECORD......................... STATUS: OK
+					</p>
+				</div>
+
+				{/* BARCODE FOOTER */}
+				<div className="-mt-px border border-(--color-border) px-4 pt-3 pb-2">
+					<div className="flex h-10 items-stretch gap-px overflow-hidden">
+						{[
+							3, 1, 2, 4, 1, 3, 1, 2, 3, 1, 4, 2, 1, 3, 2, 4, 1, 2, 3, 1, 2, 4,
+							3, 1, 2, 1, 3, 4, 2, 1, 3, 2, 1, 4, 2, 3, 1, 2, 4, 1, 3, 2, 1, 2,
+							3, 4, 1, 2, 3, 1,
+						].map((w, i) => (
+							<div
+								key={i}
+								style={{ width: `${w * 3}px` }}
+								className="bg-(--color-black)"
 							/>
-						) : null}
+						))}
 					</div>
-
-					<div>
-						<h1 className="text-3xl font-semibold text-black">
-							{productoDetalle.nombre}
-						</h1>
-						<p className="mt-2 text-sm text-(--color-gray)">
-							{productoDetalle.descripcion || "Sin descripción"}
-						</p>
-						<p className="mt-4 text-sm text-(--color-gray-dark)">
-							Modelo: {productoDetalle.modelo || "-"}
-						</p>
-						<p className="mt-1 text-sm text-(--color-gray-dark)">
-							Precio: {new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(productoDetalle.precio || 0)}
-						</p>
-
-						<Button
-							onClick={handleAddToCart}
-							disabled={!productoDetalle.enStock}
-							className="mt-6">
-							{productoDetalle.enStock ? "Añadir al carrito" : "Sin stock"}
-						</Button>
-
-						{mensajeCarrito ? (
-							<p className="mt-3 text-sm text-(--color-gray-dark)">{mensajeCarrito}</p>
-						) : null}
-					</div>
+					<p className="mt-1 text-center text-xs tracking-[0.4em]">*{id}*</p>
 				</div>
 			</main>
 

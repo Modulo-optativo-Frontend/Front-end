@@ -95,21 +95,27 @@ export function Carrito() {
 
 	if (!authToken) {
 		return (
-			<div className="flex min-h-screen flex-col bg-white">
+			<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
 				<SiteHeader
 					authToken={authToken}
 					onLogout={handleLogout}
 				/>
-				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-					<h1 className="text-3xl font-semibold text-black">Carrito</h1>
-					<p className="mt-3 text-sm text-(--color-gray)">
-						Necesitas iniciar sesión para ver tu carrito.
-					</p>
-					<Link
-						to="/login"
-						className="mt-4 inline-block text-sm text-(--color-blue)">
-						Ir a login
-					</Link>
+				<main className="flex-1 p-4">
+					<div className="border border-(--color-border) p-4">
+						<p className="text-xs font-bold uppercase">
+							000100 CART-ACCESS-DIVISION
+						</p>
+						<div className="my-2 border-t border-dashed border-(--color-border)" />
+						<p className="text-xs font-bold uppercase">
+							[!] AUTH-REQUIRED: NECESITAS INICIAR SESION.
+						</p>
+						<div className="my-2 border-t border-dashed border-(--color-border)" />
+						<Link
+							to="/login"
+							className="text-xs font-bold uppercase underline">
+							[&gt;] IR-A-LOGIN
+						</Link>
+					</div>
 				</main>
 				<SiteFooter />
 			</div>
@@ -118,13 +124,21 @@ export function Carrito() {
 
 	if (loadingCarrito) {
 		return (
-			<div className="flex min-h-screen flex-col bg-white">
+			<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
 				<SiteHeader
 					authToken={authToken}
 					onLogout={handleLogout}
 				/>
-				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-					<p className="text-sm text-(--color-gray)">Cargando carrito...</p>
+				<main className="flex-1 p-4">
+					<div className="border border-(--color-border) p-4">
+						<p className="text-xs font-bold uppercase">
+							000100 CART-LOADING-DIVISION
+						</p>
+						<div className="my-2 border-t border-dashed border-(--color-border)" />
+						<p className="text-xs uppercase">
+							[ ] LOADING CART-RECORDS.................................
+						</p>
+					</div>
 				</main>
 				<SiteFooter />
 			</div>
@@ -133,13 +147,21 @@ export function Carrito() {
 
 	if (errorCarrito) {
 		return (
-			<div className="flex min-h-screen flex-col bg-white">
+			<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
 				<SiteHeader
 					authToken={authToken}
 					onLogout={handleLogout}
 				/>
-				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-					<p className="text-sm text-(--color-error)">{errorCarrito}</p>
+				<main className="flex-1 p-4">
+					<div className="border border-(--color-border) p-4">
+						<p className="text-xs font-bold uppercase">
+							000100 CART-EXCEPTION-DIVISION
+						</p>
+						<div className="my-2 border-t border-dashed border-(--color-border)" />
+						<p className="text-xs font-bold uppercase">
+							[!] FAULT: {errorCarrito}
+						</p>
+					</div>
 				</main>
 				<SiteFooter />
 			</div>
@@ -148,16 +170,21 @@ export function Carrito() {
 
 	if (itemsCarrito.length === 0) {
 		return (
-			<div className="flex min-h-screen flex-col bg-white">
+			<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
 				<SiteHeader
 					authToken={authToken}
 					onLogout={handleLogout}
 				/>
-				<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-					<h1 className="text-3xl font-semibold text-black">Carrito</h1>
-					<p className="mt-3 text-sm text-(--color-gray)">
-						No tienes productos en el carrito.
-					</p>
+				<main className="flex-1 p-4">
+					<div className="border border-(--color-border) p-4">
+						<p className="text-xs font-bold uppercase">
+							000100 CART-DATA-DIVISION
+						</p>
+						<div className="my-2 border-t border-dashed border-(--color-border)" />
+						<p className="text-xs uppercase">
+							[--] CART-EMPTY........... 0 ITEMS FOUND
+						</p>
+					</div>
 				</main>
 				<SiteFooter />
 			</div>
@@ -172,23 +199,53 @@ export function Carrito() {
 		navigate("/checkout");
 	}
 	return (
-		<div className="flex min-h-screen flex-col bg-white">
+		<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
 			<SiteHeader
 				authToken={authToken}
 				onLogout={handleLogout}
 			/>
 
-			<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-				<div className="flex items-center justify-between">
-					<h1 className="text-3xl font-semibold text-black">Carrito</h1>
+			<main className="flex-1 p-4">
+				{/* IDENTIFICATION */}
+				<div className="border border-(--color-border) p-2">
+					<p className="text-xs font-bold uppercase">
+						000100 CART-IDENTIFICATION-DIVISION
+					</p>
+					<p className="text-xs font-bold uppercase">
+						000200 MODULE: SHOPPING-CART-MANAGER..... ITEMS:{" "}
+						{itemsCarrito.length}
+					</p>
+				</div>
+
+				{/* ACTIONS HEADER */}
+				<div className="-mt-px border border-(--color-border) flex items-center justify-between px-4 py-2">
+					<p className="text-xs font-bold uppercase">
+						000300 CART-ITEMS-SECTION
+					</p>
 					<Button
 						variant="secondary"
 						onClick={handleVaciarCarrito}>
-						Vaciar carrito
+						[X] VACIAR-CARRITO
 					</Button>
 				</div>
 
-				<div className="mt-8 space-y-4">
+				{/* ITEMS */}
+				<div className="-mt-px border border-(--color-border)">
+					{/* TABLE HEADER */}
+					<div className="flex border-b border-(--color-border) bg-(--color-black) text-(--color-white)">
+						<div className="flex-1 px-4 py-2 text-xs font-bold uppercase">
+							NOMBRE-PRODUCTO
+						</div>
+						<div className="w-20 border-l border-(--color-white) px-4 py-2 text-xs font-bold uppercase">
+							QTY
+						</div>
+						<div className="w-32 border-l border-(--color-white) px-4 py-2 text-right text-xs font-bold uppercase">
+							IMPORTE
+						</div>
+						<div className="w-24 border-l border-(--color-white) px-4 py-2 text-xs font-bold uppercase">
+							ACT
+						</div>
+					</div>
 					{itemsCarrito.map((itemCarrito) => {
 						const productoCarrito = itemCarrito.producto || {};
 						const productoId = productoCarrito._id || itemCarrito.producto;
@@ -197,25 +254,27 @@ export function Carrito() {
 						return (
 							<div
 								key={String(productoId)}
-								className="flex items-center justify-between rounded-xl border border-(--color-border) p-4">
-								<div>
-									<p className="text-sm font-semibold text-black">
-										{productoCarrito.nombre || "Producto"}
-									</p>
-									<p className="text-xs text-(--color-gray)">
-										Cantidad: {cantidadProducto}
+								className="flex items-center border-b border-dashed border-(--color-border)">
+								<div className="flex-1 px-4 py-3">
+									<p className="text-xs font-bold uppercase">
+										{productoCarrito.nombre || "PRODUCTO"}
 									</p>
 								</div>
-								<div className="flex items-center gap-3">
-									<p className="text-sm font-semibold text-black">
+								<div className="w-20 border-l border-(--color-border) px-4 py-3">
+									<p className="text-xs font-bold">{cantidadProducto}</p>
+								</div>
+								<div className="w-32 border-l border-(--color-border) px-4 py-3 text-right">
+									<p className="text-xs font-bold">
 										{formatPrice(
 											(productoCarrito.precio || 0) * cantidadProducto,
 										)}
 									</p>
+								</div>
+								<div className="w-24 border-l border-(--color-border) px-4 py-3">
 									<Button
 										variant="secondary"
 										onClick={() => handleQuitarItem(productoId)}>
-										Quitar
+										[-] QUITAR
 									</Button>
 								</div>
 							</div>
@@ -223,17 +282,22 @@ export function Carrito() {
 					})}
 				</div>
 
-				<div className="mt-8 flex justify-end">
-					<p className="text-lg font-semibold text-black">
-						Total: {formatPrice(totalCarrito)}
+				{/* TOTAL */}
+				<div className="-mt-px border border-(--color-border) flex items-center justify-between px-4 py-3">
+					<p className="text-xs font-bold uppercase">
+						000400 TOTAL-AMOUNT-SECTION
 					</p>
+					<p className="text-xl font-bold">{formatPrice(totalCarrito)}</p>
 				</div>
 
-				<Button
-					onClick={irAlCheckout}
-					variant="primary"
-					children={"Completar pedido"}
-				/>
+				{/* CHECKOUT */}
+				<div className="-mt-px border border-(--color-border) px-4 py-3">
+					<Button
+						onClick={irAlCheckout}
+						className="w-full">
+						[&gt;] COMPLETAR-PEDIDO
+					</Button>
+				</div>
 			</main>
 
 			<SiteFooter />

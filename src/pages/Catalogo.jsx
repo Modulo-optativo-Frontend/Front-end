@@ -59,32 +59,68 @@ export function Catalogo() {
 	}
 
 	return (
-		<div className="flex min-h-screen flex-col bg-white">
-			<SiteHeader authToken={authToken} onLogout={handleLogout} />
+		<div className="font-mono flex min-h-screen flex-col bg-(--color-surface) text-(--color-black)">
+			<SiteHeader
+				authToken={authToken}
+				onLogout={handleLogout}
+			/>
 
-			<main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
-				<h1 className="text-3xl font-semibold text-black">Catálogo completo</h1>
-				<p className="mt-2 text-sm text-(--color-gray)">Todos los equipos disponibles.</p>
+			<main className="flex-1 p-4">
+				{/* 000100 CATALOG-IDENTIFICATION */}
+				<div className="border border-(--color-border) p-2">
+					<p className="text-xs font-bold uppercase">
+						000100 CATALOG-IDENTIFICATION-DIVISION
+					</p>
+					<p className="text-xs font-bold uppercase">
+						000200 MODULE: FULL-PRODUCT-CATALOG........... STATUS: ACTIVE
+					</p>
+				</div>
 
+				{/* 000300 STATUS MSG */}
 				{mensajeCarrito ? (
-					<p className="mt-4 text-sm text-(--color-gray-dark)">{mensajeCarrito}</p>
+					<div className="-mt-px border border-(--color-border) px-4 py-2">
+						<p className="text-xs font-bold uppercase">
+							[MSG]&gt; {mensajeCarrito}
+						</p>
+					</div>
 				) : null}
 
 				{loadingProductos ? (
-					<p className="mt-8 text-sm text-(--color-gray)">Cargando productos...</p>
+					<div className="-mt-px border border-(--color-border) px-4 py-3">
+						<p className="text-xs uppercase">
+							[ ] LOADING CATALOG-RECORDS.................................
+						</p>
+					</div>
 				) : null}
 
 				{!loadingProductos && errorProductos ? (
-					<p className="mt-8 text-sm text-(--color-error)">{errorProductos}</p>
+					<div className="-mt-px border border-(--color-border) px-4 py-3">
+						<p className="text-xs font-bold uppercase">
+							[!] FAULT: {errorProductos}
+						</p>
+					</div>
 				) : null}
 
 				{!loadingProductos && !errorProductos && productos.length === 0 ? (
-					<p className="mt-8 text-sm text-(--color-gray)">No hay productos disponibles.</p>
+					<div className="-mt-px border border-(--color-border) px-4 py-3">
+						<p className="text-xs uppercase">[--] NO-RECORDS-FOUND</p>
+					</div>
 				) : null}
 
 				{!loadingProductos && !errorProductos && productos.length > 0 ? (
-					<div className="mt-8">
-						<ProductGrid productos={productos} onAddToCart={handleAddToCart} />
+					<div className="-mt-px">
+						<div className="border border-(--color-border) -mt-px px-4 py-2">
+							<p className="text-xs font-bold uppercase">
+								000400 PRODUCT-GRID-SECTION.......... RECORDS:{" "}
+								{productos.length}
+							</p>
+						</div>
+						<div className="-mt-px">
+							<ProductGrid
+								productos={productos}
+								onAddToCart={handleAddToCart}
+							/>
+						</div>
 					</div>
 				) : null}
 			</main>

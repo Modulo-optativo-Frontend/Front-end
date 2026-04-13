@@ -21,28 +21,25 @@ function CartDropdown({
 	// 1️⃣ Error
 	if (cartError) {
 		content = (
-			<p className="text-xs text-red-600 mb-2">{cartError}</p>
+			<p className="text-xs font-bold uppercase">[!] FAULT: {cartError}</p>
 		);
 	}
 
 	// 2️⃣ Loading
 	else if (isCartLoading) {
-		content = (
-			<p className="text-xs text-gray-500">Cargando carrito...</p>
-		);
+		content = <p className="text-xs uppercase">[ ] LOADING CART-RECORDS....</p>;
 	}
 
 	// 3️⃣ No hay token
 	else if (!token) {
 		content = (
-			<div className="text-xs text-gray-500">
-				<p>Inicia sesión para guardar tu carrito.</p>
-
+			<div className="text-xs">
+				<p className="uppercase">[!] AUTH-REQUIRED: INICIA SESION.</p>
 				<Link
 					to="/login"
 					onClick={closeCart}
-					className="inline-flex mt-3 rounded-full bg-blue-600 px-3 py-1.5 text-white text-xs">
-					Iniciar sesión
+					className="mt-2 block border border-(--color-border) bg-(--color-accent) px-3 py-1 text-xs font-bold uppercase text-(--color-white) hover:bg-(--color-highlight) hover:text-(--color-black)">
+					[&gt;] LOGIN
 				</Link>
 			</div>
 		);
@@ -51,29 +48,22 @@ function CartDropdown({
 	// 4️⃣ Carrito vacío
 	else if (!cartItems || cartItems.length === 0) {
 		content = (
-			<p className="text-xs text-gray-500">
-				Aún no has añadido productos.
-			</p>
+			<p className="text-xs uppercase">[--] CART-EMPTY........... 0 ITEMS</p>
 		);
 	}
 
 	// 5️⃣ Carrito con productos
 	else {
 		content = (
-			<div className="space-y-3">
+			<div>
 				{cartItems.map(function (item) {
 					const producto = item.producto;
 
 					let id = item.producto;
-					if (
-						producto &&
-						producto._id !== undefined &&
-						producto._id !== null
-					) {
+					if (producto && producto._id !== undefined && producto._id !== null) {
 						id = producto._id;
 					}
-
-					let nombre = "Producto";
+					let nombre = "PRODUCTO";
 					if (
 						producto &&
 						producto.nombre !== undefined &&
@@ -81,8 +71,7 @@ function CartDropdown({
 					) {
 						nombre = producto.nombre;
 					}
-
-					let modelo = "Modelo no disponible";
+					let modelo = "N/A";
 					if (
 						producto &&
 						producto.modelo !== undefined &&
@@ -90,7 +79,6 @@ function CartDropdown({
 					) {
 						modelo = producto.modelo;
 					}
-
 					let precio = 0;
 					if (
 						producto &&
@@ -99,7 +87,6 @@ function CartDropdown({
 					) {
 						precio = producto.precio;
 					}
-
 					let cantidad = 0;
 					if (item.cantidad !== undefined && item.cantidad !== null) {
 						cantidad = item.cantidad;
@@ -108,50 +95,43 @@ function CartDropdown({
 					return (
 						<div
 							key={String(id)}
-							className="flex items-start justify-between gap-3">
-							<div>
-								<p className="text-xs font-medium text-gray-900">
-									{nombre}
-								</p>
-
-								<p className="text-[11px] text-gray-500">{modelo}</p>
-
-								<p className="text-[11px] text-gray-700">
-									Cantidad: {cantidad}
-								</p>
-							</div>
-
-							<div className="text-right">
-								<p className="text-xs font-semibold text-gray-900">
-									{formatPrice(precio * cantidad)}
-								</p>
-
-								<button
-									type="button"
-									onClick={function () {
-										handleRemoveFromCart(id);
-									}}
-									className="mt-2 rounded-full border border-gray-200 px-2.5 py-1 text-[11px]">
-									Quitar
-								</button>
+							className="border-b border-dashed border-(--color-border) py-2">
+							<div className="flex items-start justify-between gap-2">
+								<div>
+									<p className="text-[10px] font-bold uppercase">{nombre}</p>
+									<p className="text-[10px] uppercase text-(--color-gray)">
+										{modelo}
+									</p>
+									<p className="text-[10px] uppercase">QTY: {cantidad}</p>
+								</div>
+								<div className="text-right">
+									<p className="text-xs font-bold">
+										{formatPrice(precio * cantidad)}
+									</p>
+									<button
+										type="button"
+										onClick={function () {
+											handleRemoveFromCart(id);
+										}}
+										className="mt-1 border border-(--color-border) px-2 py-0.5 text-[10px] font-bold uppercase hover:bg-(--color-gray-light)">
+										[-] QUITAR
+									</button>
+								</div>
 							</div>
 						</div>
 					);
 				})}
 
-				<div className="pt-3 border-t border-gray-200 flex items-center justify-between">
-					<span className="text-xs text-gray-500">Total</span>
-
-					<span className="text-sm font-semibold text-gray-900">
-						{formatPrice(cartTotal)}
-					</span>
+				<div className="mt-2 flex items-center justify-between border-t border-(--color-border) pt-2">
+					<span className="text-xs font-bold uppercase">TOTAL</span>
+					<span className="text-sm font-bold">{formatPrice(cartTotal)}</span>
 				</div>
 
 				<button
 					type="button"
 					onClick={handleClearCart}
-					className="w-full rounded-full border border-gray-200 px-3 py-1.5 text-xs">
-					Vaciar carrito
+					className="mt-2 w-full border border-(--color-border) px-3 py-1 text-xs font-bold uppercase hover:bg-(--color-gray-light)">
+					[x] VACIAR-CARRITO
 				</button>
 			</div>
 		);
@@ -161,21 +141,17 @@ function CartDropdown({
 		<div
 			role="dialog"
 			aria-label="Carrito de compra"
-			className="absolute right-0 top-12 w-80 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl">
-			<div className="flex items-center justify-between mb-3">
-				<p className="text-xs font-semibold uppercase tracking-widest text-gray-800">
-					Tu carrito
-				</p>
-
+			className="font-mono absolute right-0 top-12 w-80 border border-black bg-white">
+			<div className="flex items-center justify-between border-b border-black px-3 py-2">
+				<p className="text-xs font-bold uppercase">000300 CART-DATA-SECTION</p>
 				<button
 					type="button"
 					onClick={closeCart}
-					className="text-xs text-gray-500">
-					Cerrar
+					className="border border-black px-2 py-0.5 text-xs font-bold uppercase hover:bg-[#f2f2f2]">
+					[X]
 				</button>
 			</div>
-
-			{content}
+			<div className="p-3">{content}</div>
 		</div>
 	);
 }

@@ -73,8 +73,11 @@ function Home() {
 	const heroImageUrl = getProductoImageUrl(productos[0] || {});
 
 	return (
-		<div className="min-h-screen bg-white text-slate-900 sl-page">
-			<SiteHeader token={token} handleLogout={handleLogout} />
+		<div className="font-mono min-h-screen bg-(--color-surface) text-(--color-black) sl-page">
+			<SiteHeader
+				token={token}
+				handleLogout={handleLogout}
+			/>
 
 			<main>
 				<HeroSection heroImageUrl={heroImageUrl} />

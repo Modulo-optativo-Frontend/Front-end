@@ -43,7 +43,10 @@ export function Registro() {
 			const nombreRespuesta = response?.data?.nombre;
 
 			setAuthToken(tokenRespuesta);
-			setAuthUser({ name: nombreRespuesta || nombreUsuario, email: emailUsuario });
+			setAuthUser({
+				name: nombreRespuesta || nombreUsuario,
+				email: emailUsuario,
+			});
 			navigate("/");
 		} catch (error) {
 			setErrorRegistro(error.message || "No se pudo crear la cuenta");
@@ -53,53 +56,86 @@ export function Registro() {
 	}
 
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-white px-4">
-			<div className="w-full max-w-md rounded-2xl border border-(--color-border) bg-white p-8">
-				<h1 className="text-2xl font-semibold text-black">Crear cuenta</h1>
+		<div className="font-mono flex min-h-screen items-center justify-center bg-(--color-surface) px-4">
+			<div className="w-full max-w-md border border-(--color-border) bg-(--color-surface)">
+				{/* HEADER */}
+				<div className="border-b border-(--color-border) p-3">
+					<p className="text-xs font-bold uppercase">
+						000100 REGISTER-ACCESS-DIVISION
+					</p>
+					<p className="text-xs font-bold uppercase">
+						000200 MODULE: NEW-USER-CREATION.......... STATUS: ACTIVE
+					</p>
+				</div>
 
-				<form onSubmit={handleRegistroSubmit} className="mt-6 space-y-4">
-					<div>
-						<label className="mb-2 block text-sm text-(--color-gray-dark)">Nombre</label>
+				<form
+					onSubmit={handleRegistroSubmit}
+					className="p-6">
+					{/* NOMBRE */}
+					<div className="mb-4">
+						<label className="mb-1 block text-xs font-bold uppercase">
+							FIELD: NOMBRE-USUARIO
+						</label>
 						<input
 							type="text"
 							value={nombreUsuario}
 							onChange={(event) => setNombreUsuario(event.target.value)}
-							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							className="w-full border border-black bg-white px-3 py-2 font-mono text-xs uppercase focus:outline-none focus:bg-[#f2f2f2]"
 						/>
 					</div>
 
-					<div>
-						<label className="mb-2 block text-sm text-(--color-gray-dark)">Email</label>
+					{/* EMAIL */}
+					<div className="mb-4">
+						<label className="mb-1 block text-xs font-bold uppercase">
+							FIELD: EMAIL-ADDRESS
+						</label>
 						<input
 							type="email"
 							value={emailUsuario}
 							onChange={(event) => setEmailUsuario(event.target.value)}
-							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							className="w-full border border-black bg-white px-3 py-2 font-mono text-xs uppercase focus:outline-none focus:bg-[#f2f2f2]"
 						/>
 					</div>
 
-					<div>
-						<label className="mb-2 block text-sm text-(--color-gray-dark)">Contraseña</label>
+					{/* PASSWORD */}
+					<div className="mb-4">
+						<label className="mb-1 block text-xs font-bold uppercase">
+							FIELD: PASSWORD-DATA
+						</label>
 						<input
 							type="password"
 							value={passwordUsuario}
 							onChange={(event) => setPasswordUsuario(event.target.value)}
-							className="w-full rounded-lg border border-(--color-border) px-3 py-2 text-sm"
+							className="w-full border border-(--color-border) bg-(--color-surface) px-3 py-2 font-mono text-xs focus:outline-none focus:bg-(--color-gray-light)"
 						/>
 					</div>
 
 					{errorRegistro ? (
-						<p className="text-sm text-(--color-error)">{errorRegistro}</p>
+						<div className="mb-4 border border-dashed border-(--color-border) p-2">
+							<p className="text-xs font-bold uppercase">
+								[!] FAULT: {errorRegistro}
+							</p>
+						</div>
 					) : null}
 
-					<Button type="submit" disabled={isSubmitting} className="w-full">
-						{isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
+					<Button
+						type="submit"
+						disabled={isSubmitting}
+						className="w-full">
+						{isSubmitting ? "[ ] CREANDO..." : "[+] CREAR-CUENTA"}
 					</Button>
 				</form>
 
-				<p className="mt-6 text-sm text-(--color-gray)">
-					¿Ya tienes cuenta? <Link to="/login" className="text-(--color-blue)">Inicia sesión</Link>
-				</p>
+				<div className="border-t border-dashed border-(--color-border) px-6 py-3">
+					<p className="text-xs uppercase">
+						[?] YA-TIENES-CUENTA &gt;{" "}
+						<Link
+							to="/login"
+							className="font-bold underline">
+							INICIA-SESION
+						</Link>
+					</p>
+				</div>
 			</div>
 		</div>
 	);

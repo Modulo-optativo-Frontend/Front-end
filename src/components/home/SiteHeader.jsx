@@ -2,52 +2,66 @@ import { Link } from "react-router-dom";
 
 function SiteHeader({ token, handleLogout }) {
 	return (
-		<header className="sl-header border-b border-(--color-border) bg-[rgba(245,245,247,0.8)] backdrop-blur-md">
-			<div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-				<Link to="/" className="flex items-center gap-2">
-					<div className="flex h-8 w-8 items-center justify-center rounded-full bg-(--color-black) text-xs font-semibold text-white">
+		<header className="sl-header font-mono border-b border-(--color-border) bg-(--color-surface)">
+			<div className="border-b border-(--color-border) px-4 py-1">
+				<p className="text-xs font-bold uppercase">
+					000100 SYS-HEADER-DIVISION............... SILVERLINE-OS V1.0
+				</p>
+			</div>
+			<div className="flex w-full items-center justify-between px-4 py-2">
+				<Link
+					to="/"
+					className="inline-flex items-center gap-2">
+					<span className="flex h-8 w-8 items-center justify-center border border-(--color-border) bg-(--color-black) text-xs font-bold text-(--color-white)">
 						SL
-					</div>
-					<span className="text-black text-sm font-semibold uppercase tracking-[0.2rem]">
-						SilverLine
+					</span>
+					<span className="text-sm font-bold uppercase tracking-widest text-(--color-black)">
+						SILVERLINE
 					</span>
 				</Link>
 
-				<nav className="hidden items-center gap-6 text-sm text-(--color-gray) md:flex">
-					<a href="#macs" className="text-(--color-gray-dark) transition-colors hover:opacity-80">
-						MacBooks
+				<nav className="hidden items-center gap-0 text-xs md:flex">
+					<a
+						href="#macs"
+						className="border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+						[MACBOOKS]
 					</a>
-					<a href="#why" className="text-(--color-gray-dark) transition-colors hover:opacity-80">
-						Por qué SilverLine
+					<a
+						href="#why"
+						className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+						[POR-QUE]
 					</a>
-					<Link to="/catalogo" className="text-(--color-gray-dark) transition-colors hover:opacity-80">
-						Catálogo
+					<Link
+						to="/catalogo"
+						className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+						[CATALOGO]
 					</Link>
 				</nav>
 
-				<div className="flex items-center gap-3 text-sm relative">
+				<div className="flex items-center gap-0 text-xs">
 					<Link
 						to="/carrito"
-						className="secondary-btn rounded-full px-3 py-1.5 text-xs transition-colors hover:opacity-90">
-						Carrito
+						className="border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+						[CARRITO]
 					</Link>
-
 					{token ? (
 						<button
 							type="button"
 							onClick={handleLogout}
-							className="secondary-btn rounded-full px-4 py-2 text-sm transition-colors hover:opacity-90">
-							Logout
+							className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+							[LOGOUT]
 						</button>
 					) : (
 						<>
-							<Link to="/login" className="text-(--color-gray-dark) transition-colors hover:opacity-80">
-								Iniciar sesión
+							<Link
+								to="/login"
+								className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+								[LOGIN]
 							</Link>
 							<Link
 								to="/registro"
-								className="primary-btn rounded-full px-4 py-2 text-sm transition-colors hover:opacity-90">
-								Crear cuenta
+								className="-ml-px border border-(--color-border) bg-(--color-accent) px-4 py-2 font-bold uppercase text-(--color-white) hover:bg-(--color-highlight) hover:text-(--color-black)">
+								[REGISTRO]
 							</Link>
 						</>
 					)}

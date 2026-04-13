@@ -4,12 +4,12 @@ export function BrandMark({ to = "/", className = "" }) {
 	return (
 		<Link
 			to={to}
-			className={`inline-flex items-center gap-2 ${className}`.trim()}>
-			<span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--color-black) text-xs font-semibold text-white">
+			className={`inline-flex items-center gap-2 font-mono no-underline ${className}`.trim()}>
+			<span className="flex h-8 w-8 items-center justify-center border border-(--color-border) bg-(--color-accent) text-xs font-bold text-(--color-white)">
 				SL
 			</span>
-			<span className="text-sm font-semibold uppercase tracking-[0.2rem] text-black">
-				SilverLine
+			<span className="text-sm font-bold uppercase tracking-widest text-(--color-black)">
+				SILVERLINE
 			</span>
 		</Link>
 	);

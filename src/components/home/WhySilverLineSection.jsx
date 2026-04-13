@@ -1,34 +1,51 @@
 function WhySilverLineSection() {
 	return (
-		<section id="why" className="border-b border-(--color-border)">
-			<div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-				<div>
-					<h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-(--color-gray-dark)">
-						Por qué SilverLine
-					</h2>
-					<p className="text-sm text-(--color-gray)">
-						Una experiencia cercana al producto nuevo, con precios realmente ajustados y garantía.
+		<section
+			id="why"
+			className="font-mono border-b border-(--color-border)">
+			<div className="border-b border-(--color-border) px-4 py-2">
+				<p className="text-xs font-bold uppercase">
+					000800 WHY-SILVERLINE-DIVISION
+				</p>
+			</div>
+			<div className="flex border-b border-(--color-border)">
+				<div className="w-1/3 border-r border-black p-6">
+					<p className="text-xs font-bold uppercase mb-2">
+						FIELD: DESCRIPCION-MODULO
+					</p>
+					<div className="border-t border-dashed border-black mb-3" />
+					<p className="text-xs uppercase leading-relaxed">
+						UNA EXPERIENCIA CERCANA AL PRODUCTO NUEVO, CON PRECIOS REALMENTE
+						AJUSTADOS Y GARANTIA.
 					</p>
 				</div>
-				<div className="space-y-4 text-sm text-(--color-gray)">
-					<p>
-						<span className="font-medium text-black">Revisión completa</span>{" "}
-						de hardware, puertos, teclado, pantalla y batería en cada equipo.
-					</p>
-					<p>
-						<span className="font-medium text-black">Configuración limpia</span>{" "}
-						con la última versión compatible de macOS listo para usar.
-					</p>
+				<div className="w-1/3 border-r border-black p-6">
+					<p className="text-xs font-bold uppercase mb-2">FIELD: SERVICIOS-A</p>
+					<div className="border-t border-dashed border-black mb-3" />
+					<div className="space-y-3 text-xs uppercase leading-relaxed">
+						<p>
+							<span className="font-bold">[*] REVISION-COMPLETA</span> DE
+							HARDWARE, PUERTOS, TECLADO, PANTALLA Y BATERIA.
+						</p>
+						<p>
+							<span className="font-bold">[*] CONFIGURACION-LIMPIA</span> CON
+							ULTIMA VERSION COMPATIBLE DE MACOS.
+						</p>
+					</div>
 				</div>
-				<div className="space-y-4 text-sm text-(--color-gray)">
-					<p>
-						<span className="font-medium text-black">Garantía incluida</span>{" "}
-						y opción de ampliarla si quieres más tranquilidad.
-					</p>
-					<p>
-						<span className="font-medium text-black">Envío rápido y seguro</span>{" "}
-						con embalaje reforzado y seguimiento.
-					</p>
+				<div className="w-1/3 p-6">
+					<p className="text-xs font-bold uppercase mb-2">FIELD: SERVICIOS-B</p>
+					<div className="border-t border-dashed border-black mb-3" />
+					<div className="space-y-3 text-xs uppercase leading-relaxed">
+						<p>
+							<span className="font-bold">[*] GARANTIA-INCLUIDA</span> Y OPCION
+							DE AMPLIARLA.
+						</p>
+						<p>
+							<span className="font-bold">[*] ENVIO-RAPIDO-SEGURO</span> CON
+							EMBALAJE REFORZADO Y SEGUIMIENTO.
+						</p>
+					</div>
 				</div>
 			</div>
 		</section>
