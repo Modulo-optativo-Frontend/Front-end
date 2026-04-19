@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { SiteHeader } from "../components/layout/SiteHeader.jsx";
 import { SiteFooter } from "../components/layout/SiteFooter.jsx";
 import { Button } from "../components/ui/Button.jsx";
+import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
 import { apiFetch } from "../lib/api.js";
 import { clearAuth, getAuthToken } from "../lib/auth.js";
 
@@ -158,9 +159,11 @@ export function Carrito() {
 							000100 CART-EXCEPTION-DIVISION
 						</p>
 						<div className="my-2 border-t border-dashed border-(--color-border)" />
-						<p className="text-xs font-bold uppercase">
-							[!] FAULT: {errorCarrito}
-						</p>
+						<FeedbackMessage
+							message={errorCarrito}
+							successMatch="__no_match__"
+							className="text-xs"
+						/>
 					</div>
 				</main>
 				<SiteFooter />

@@ -5,6 +5,11 @@
       "source": "anthropics/skills",
       "sourceType": "github",
       "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
+    },
+    "ux-ui-design": {
+      "source": "josavicentevw/ai-agent-skills",
+      "sourceType": "github",
+      "computedHash": "004a76606ada440e8d1f992783d9d057416360abbc15f665b430b4149979a213"
     }
   }
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { SiteHeader } from "../components/layout/SiteHeader.jsx";
 import { SiteFooter } from "../components/layout/SiteFooter.jsx";
 import { Button } from "../components/ui/Button.jsx";
+import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
 import { apiFetch } from "../lib/api.js";
 import { clearAuth, getAuthToken } from "../lib/auth.js";
 import { getProductoImageUrl } from "../lib/media.js";
@@ -102,9 +103,11 @@ export function Detalle() {
 							000100 EXCEPTION-HANDLER-DIVISION
 						</p>
 						<div className="my-2 border-t border-dashed border-(--color-border)" />
-						<p className="text-xs font-bold">
-							[!] FAULT: {errorProducto || "PRODUCT-RECORD NOT FOUND"}
-						</p>
+						<FeedbackMessage
+							message={errorProducto || "Product record not found"}
+							successMatch="__no_match__"
+							className="text-xs"
+						/>
 						<div className="my-2 border-t border-dashed border-(--color-border)" />
 						<Link
 							to="/catalogo"
@@ -249,9 +252,10 @@ export function Detalle() {
 									: "[X] OUT-OF-STOCK"}
 							</Button>
 							{mensajeCarrito ? (
-								<p className="mt-2 border border-dashed border-(--color-border) p-2 text-xs uppercase">
-									[MSG]&gt; {mensajeCarrito}
-								</p>
+								<FeedbackMessage
+									message={mensajeCarrito}
+									className="mt-2 text-xs"
+								/>
 							) : null}
 						</div>
 					</div>

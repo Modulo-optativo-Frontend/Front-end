@@ -5,7 +5,9 @@ import { Detalle } from "./pages/Detalle";
 import { Carrito } from "./pages/Carrito";
 import { Login } from "./pages/Login";
 import { Registro } from "./pages/Registro";
-import { Checkout } from "./pages/checkout";
+import { Checkout } from "./pages/Checkout";
+import { CheckoutSuccess } from "./pages/CheckoutSuccess";
+import { CheckoutCancel } from "./pages/CheckoutCancel";
 
 function App() {
 	return (
@@ -38,6 +40,15 @@ function App() {
 			<Route
 				path="/checkout"
 				element={<Checkout />}
+			/>
+
+			<Route
+				path="/checkout/success"
+				element={<CheckoutSuccess />}
+			/>
+			<Route
+				path="/checkout/cancel"
+				element={<CheckoutCancel />}
 			/>
 		</Routes>
 	);

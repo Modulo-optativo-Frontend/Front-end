@@ -1,4 +1,5 @@
 import { getProductoImageUrl } from "../../lib/media.js";
+import { FeedbackMessage } from "../ui/FeedBackMessage.jsx";
 
 function TrendingProductsSection({
 	productosDestacados,
@@ -24,8 +25,11 @@ function TrendingProductsSection({
 			</div>
 
 			{cartMessage ? (
-				<div className="border-b border-(--color-border) px-4 py-2">
-					<p className="text-xs font-bold uppercase">[MSG]&gt; {cartMessage}</p>
+				<div className="border-b border-(--color-border) px-4 py-3">
+					<FeedbackMessage
+						message={cartMessage}
+						className="text-xs"
+					/>
 				</div>
 			) : null}
 
@@ -37,9 +41,11 @@ function TrendingProductsSection({
 				</div>
 			) : productosError ? (
 				<div className="px-4 py-4">
-					<p className="text-xs font-bold uppercase">
-						[!] FAULT: {productosError}
-					</p>
+					<FeedbackMessage
+						message={productosError}
+						successMatch="__no_match__"
+						className="text-xs"
+					/>
 				</div>
 			) : productos.length === 0 ? (
 				<div className="px-4 py-4">

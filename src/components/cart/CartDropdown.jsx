@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FeedbackMessage } from "../ui/FeedBackMessage.jsx";
 
 function CartDropdown({
 	isOpen,
@@ -21,7 +22,11 @@ function CartDropdown({
 	// 1️⃣ Error
 	if (cartError) {
 		content = (
-			<p className="text-xs font-bold uppercase">[!] FAULT: {cartError}</p>
+			<FeedbackMessage
+				message={cartError}
+				successMatch="__no_match__"
+				className="text-xs"
+			/>
 		);
 	}
 
@@ -34,11 +39,15 @@ function CartDropdown({
 	else if (!token) {
 		content = (
 			<div className="text-xs">
-				<p className="uppercase">[!] AUTH-REQUIRED: INICIA SESION.</p>
+				<FeedbackMessage
+					message="Necesitas iniciar sesion para consultar el carrito."
+					successMatch="__no_match__"
+					className="text-xs"
+				/>
 				<Link
 					to="/login"
 					onClick={closeCart}
-					className="mt-2 block border border-(--color-border) bg-(--color-accent) px-3 py-1 text-xs font-bold uppercase text-(--color-white) hover:bg-(--color-highlight) hover:text-(--color-black)">
+					className="mt-2 block border border-(--color-border) bg-(--color-accent) px-3 py-1 text-center text-xs font-bold uppercase text-(--color-white) hover:bg-(--color-highlight) hover:text-(--color-black)">
 					[&gt;] LOGIN
 				</Link>
 			</div>
@@ -141,13 +150,13 @@ function CartDropdown({
 		<div
 			role="dialog"
 			aria-label="Carrito de compra"
-			className="font-mono absolute right-0 top-12 w-80 border border-black bg-white">
-			<div className="flex items-center justify-between border-b border-black px-3 py-2">
+			className="font-mono absolute right-0 top-12 w-80 border border-(--color-border) bg-[rgba(6,12,25,0.98)] shadow-[0_18px_50px_rgba(0,0,0,0.45)]">
+			<div className="flex items-center justify-between border-b border-(--color-border) px-3 py-2">
 				<p className="text-xs font-bold uppercase">000300 CART-DATA-SECTION</p>
 				<button
 					type="button"
 					onClick={closeCart}
-					className="border border-black px-2 py-0.5 text-xs font-bold uppercase hover:bg-[#f2f2f2]">
+					className="border border-(--color-border) px-2 py-0.5 text-xs font-bold uppercase hover:bg-(--color-gray-light)">
 					[X]
 				</button>
 			</div>

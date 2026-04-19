@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SiteHeader } from "../components/layout/SiteHeader.jsx";
 import { SiteFooter } from "../components/layout/SiteFooter.jsx";
 import { ProductGrid } from "../components/product/ProductGrid.jsx";
+import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
 import { apiFetch } from "../lib/api.js";
 import { clearAuth, getAuthToken } from "../lib/auth.js";
 
@@ -78,10 +79,11 @@ export function Catalogo() {
 
 				{/* 000300 STATUS MSG */}
 				{mensajeCarrito ? (
-					<div className="-mt-px border border-(--color-border) px-4 py-2">
-						<p className="text-xs font-bold uppercase">
-							[MSG]&gt; {mensajeCarrito}
-						</p>
+					<div className="-mt-px border border-(--color-border) px-4 py-3">
+						<FeedbackMessage
+							message={mensajeCarrito}
+							className="text-xs"
+						/>
 					</div>
 				) : null}
 
@@ -95,9 +97,11 @@ export function Catalogo() {
 
 				{!loadingProductos && errorProductos ? (
 					<div className="-mt-px border border-(--color-border) px-4 py-3">
-						<p className="text-xs font-bold uppercase">
-							[!] FAULT: {errorProductos}
-						</p>
+						<FeedbackMessage
+							message={errorProductos}
+							successMatch="__no_match__"
+							className="text-xs"
+						/>
 					</div>
 				) : null}
 

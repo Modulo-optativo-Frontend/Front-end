@@ -1,4 +1,5 @@
 import { getProductoImageUrl } from "../lib/media.js";
+import { FeedbackMessage } from "./ui/FeedBackMessage.jsx";
 
 function ProductosTrend({
 	productosDestacados,
@@ -9,10 +10,6 @@ function ProductosTrend({
 	formatPrice,
 	handleAddToCart,
 }) {
-	const cartMessageColorClass = cartMessage?.includes("añadido")
-		? "text-[#0a7f39]"
-		: "text-(--color-error)";
-
 	return (
 		<section id="macs" className="border-b border-(--color-border)">
 			<div className="mx-auto max-w-6xl px-4 py-12">
@@ -25,12 +22,20 @@ function ProductosTrend({
 					</p>
 				</div>
 
-				{cartMessage ? <p className={`mb-4 text-sm ${cartMessageColorClass}`}>{cartMessage}</p> : null}
+				{cartMessage ? (
+					<FeedbackMessage
+						message={cartMessage}
+						className="mb-4"
+					/>
+				) : null}
 
 				{isLoadingProductos ? (
 					<p className="text-(--color-gray) text-sm">Cargando productos...</p>
 				) : productosError ? (
-					<p className="text-(--color-error) text-sm">{productosError}</p>
+					<FeedbackMessage
+						message={productosError}
+						successMatch="__no_match__"
+					/>
 				) : productos.length === 0 ? (
 					<p className="text-(--color-gray) text-sm">No hay productos disponibles ahora mismo.</p>
 				) : (
