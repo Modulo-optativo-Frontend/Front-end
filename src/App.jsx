@@ -8,6 +8,7 @@ import { Registro } from "./pages/Registro";
 import { Checkout } from "./pages/Checkout";
 import { CheckoutSuccess } from "./pages/CheckoutSuccess";
 import { CheckoutCancel } from "./pages/CheckoutCancel";
+import { MisPedidos } from "./pages/MisPedidos";
 
 function App() {
 	return (
@@ -49,6 +50,10 @@ function App() {
 			<Route
 				path="/checkout/cancel"
 				element={<CheckoutCancel />}
+			/>
+			<Route
+				path="/mis-pedidos"
+				element={<MisPedidos />}
 			/>
 		</Routes>
 	);

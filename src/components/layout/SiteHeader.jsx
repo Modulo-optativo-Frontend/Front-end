@@ -24,6 +24,13 @@ export function SiteHeader({ authToken, onLogout }) {
 						className="rounded-full border border-transparent px-3 py-2 hover:border-(--color-border) hover:bg-white/5">
 						Carrito
 					</Link>
+					{authToken ? (
+						<Link
+							to="/mis-pedidos"
+							className="rounded-full border border-transparent px-3 py-2 hover:border-(--color-border) hover:bg-white/5">
+							Mis pedidos
+						</Link>
+					) : null}
 				</nav>
 
 				<div className="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-(--color-gray-dark)">

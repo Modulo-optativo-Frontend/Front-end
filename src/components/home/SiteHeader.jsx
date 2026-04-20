@@ -45,12 +45,19 @@ function SiteHeader({ token, handleLogout }) {
 						[CARRITO]
 					</Link>
 					{token ? (
-						<button
-							type="button"
-							onClick={handleLogout}
-							className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
-							[LOGOUT]
-						</button>
+						<>
+							<Link
+								to="/mis-pedidos"
+								className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+								[MIS PEDIDOS]
+							</Link>
+							<button
+								type="button"
+								onClick={handleLogout}
+								className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+								[LOGOUT]
+							</button>
+						</>
 					) : (
 						<>
 							<Link

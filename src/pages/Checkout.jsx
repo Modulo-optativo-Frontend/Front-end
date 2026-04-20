@@ -557,8 +557,7 @@ export function Checkout() {
 							Finaliza tu compra
 						</h1>
 						<p className="sl-copy mt-5 max-w-2xl text-sm md:text-base">
-							Revisa la entrega, comprueba el resumen y pasa al pago con una
-							interfaz clara y consistente.
+							Revisa la entrega, comprueba el resumen y pasa al pago
 						</p>
 					</div>
 					<div className="sl-panel p-5">
