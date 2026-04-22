@@ -9,6 +9,7 @@ import { Checkout } from "./pages/Checkout";
 import { CheckoutSuccess } from "./pages/CheckoutSuccess";
 import { CheckoutCancel } from "./pages/CheckoutCancel";
 import { MisPedidos } from "./pages/MisPedidos";
+import DashboardUser from "./pages/DashboardUser";
 
 function App() {
 	return (
@@ -54,6 +55,10 @@ function App() {
 			<Route
 				path="/mis-pedidos"
 				element={<MisPedidos />}
+			/>
+			<Route
+				path="/dashboard"
+				element={<DashboardUser />}
 			/>
 		</Routes>
 	);

@@ -60,7 +60,15 @@ function Home() {
 			});
 			setCartMessage("Producto añadido al carrito.");
 		} catch (error) {
-			setCartMessage(error.message || "No se pudo añadir el producto.");
+			const mensajes = {
+				"token requerido": "Debes iniciar sesión para añadir productos",
+				
+			};
+			setCartMessage(
+				mensajes[error.message] ??
+					error.message ??
+					"No se pudo añadir el producto.",
+			);
 		}
 	}
 

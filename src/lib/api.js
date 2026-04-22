@@ -1,78 +1,80 @@
 import { getAuthToken } from "./auth";
-const apiUrlFromEnv = import.meta.env.VITE_API_URL
-	? import.meta.env.VITE_API_URL.replace(/\/$/, "")
-	: "http://localhost:3000";
 
-export const API_URL_BASE = import.meta.env.DEV ? "" : apiUrlFromEnv;
+// ─────────────────────────────────────────────
+// CONFIGURACIÓN: URL base del servidor
+// En desarrollo (npm run dev) Vite hace de proxy, así que la URL es ""
+// En producción se usa la variable de entorno VITE_API_URL
+// ─────────────────────────────────────────────
+const esModoDesarrollo = import.meta.env.DEV;
+const urlEnVariableDeEntorno =
+	import.meta.env.VITE_API_URL || "http://localhost:3000";
+const SERVIDOR_URL = esModoDesarrollo
+	? ""
+	: urlEnVariableDeEntorno.replace(/\/$/, "");
 
-export async function apiFetch(ruta, informacion) {
-	// Si no me pasan informacion, creo un objeto vacío
-	if (!informacion) {
-		informacion = {};
-	}
+export const API_URL_BASE = SERVIDOR_URL;
 
-	// Método por defecto
-	let method = "GET";
-	if (informacion.method) {
-		method = informacion.method;
-	}
-
-	// Body opcional
-	let body = null;
-	if (informacion.body) {
-		body = JSON.stringify(informacion.body);
-	}
-
-	// Headers básicos
-	let cabeceras = {
-		"Content-Type": "application/json",
+// ─────────────────────────────────────────────
+// apiFetch — función para llamar al servidor
+//
+// Uso básico:
+//   apiFetch("/api/productos")
+//
+// Con opciones:
+//   apiFetch("/api/carrito/items", {
+//     method: "POST",          — GET por defecto
+//     body: { productoId },    — datos que envías
+//     token: authToken,        — token JWT si la ruta requiere login
+//   })
+// ─────────────────────────────────────────────
+export async function apiFetch(ruta, opciones = {}) {
+	// ── PASO 1: Preparar las cabeceras de la petición ──────────────────
+	const cabeceras = {
+		"Content-Type": "application/json", // siempre enviamos JSON
 	};
 
-	// Si vienen headers extra, los añado
-	if (informacion.headers) {
-		for (let key in informacion.headers) {
-			cabeceras[key] = informacion.headers[key];
+	// Si el componente pasa el token directamente, lo añadimos
+	if (opciones.token) {
+		cabeceras["Authorization"] = "Bearer " + opciones.token;
+	}
+
+	// Si el componente pasa auth:true, leemos el token del localStorage
+	if (opciones.auth) {
+		const tokenGuardado = getAuthToken();
+		if (tokenGuardado) {
+			cabeceras["Authorization"] = "Bearer " + tokenGuardado;
 		}
 	}
-	// Si hay token, añado Authorization
-	// Si auth=true, leo token del localStorage (authTok) automáticamente
-	if (informacion.auth) {
-		const t = getAuthToken();
-		if (t) cabeceras["Authorization"] = "Bearer " + t;
+
+	// Si el componente pasa cabeceras extra, las mezclamos
+	if (opciones.headers) {
+		Object.assign(cabeceras, opciones.headers);
 	}
 
-	// Compatibilidad: si alguien pasa token manualmente, también funciona
-	if (informacion.token) {
-		cabeceras["Authorization"] = "Bearer " + informacion.token;
-	}
-
-	// Hago la petición
-	const response = await fetch(API_URL_BASE + ruta, {
-		method: method,
+	// ── PASO 2: Hacer la petición HTTP ─────────────────────────────────
+	const respuesta = await fetch(SERVIDOR_URL + ruta, {
+		method: opciones.method || "GET",
 		headers: cabeceras,
-		body: body,
+		body: opciones.body ? JSON.stringify(opciones.body) : null,
 	});
 
-	// Intento convertir la respuesta a JSON
-	let data;
+	// ── PASO 3: Leer la respuesta como JSON ────────────────────────────
+	let datos;
 	try {
-		data = await response.json();
-	} catch (error) {
-		data = {
-			message: "Respuesta inválida del servidor" + error.message,
-		};
+		datos = await respuesta.json();
+	} catch {
+		// El servidor no devolvió JSON válido
+		datos = { message: "El servidor devolvió una respuesta inválida" };
 	}
 
-	// Si la respuesta no es correcta (status 200-299)
-	if (!response.ok) {
-		let message = "Error de servidor";
-
-		if (data && data.message) {
-			message = data.message;
-		}
-
-		throw new Error(message);
+	// ── PASO 4: Si el servidor devolvió un error, lanzarlo ─────────────
+	// Los status 200-299 son éxito, cualquier otro es error
+	if (!respuesta.ok) {
+		const error = new Error(datos?.message || "Error de servidor");
+		error.status = respuesta.status; // número del error: 401, 403, 404, 500...
+		throw error;
 	}
 
-	return data;
+	// ── PASO 5: Devolver los datos al componente que llamó ─────────────
+	return datos;
 }

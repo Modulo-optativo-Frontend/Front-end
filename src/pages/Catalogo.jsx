@@ -40,6 +40,9 @@ export function Catalogo() {
 			return;
 		}
 
+		const producto = productos.find((p) => p._id === productoId);
+		if (!producto?.enStock) return;
+
 		setMensajeCarrito("");
 
 		try {

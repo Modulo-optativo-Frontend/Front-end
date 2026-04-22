@@ -22,6 +22,8 @@ export function Carrito() {
 	const [loadingCarrito, setLoadingCarrito] = useState(true);
 	const [errorCarrito, setErrorCarrito] = useState("");
 
+	// Cámbialo a:
+	const [msg] = useState("[!] DEBES-INICIAR-SESION........ LOGIN-REQUIRED");
 	const totalCarrito = useMemo(() => {
 		return itemsCarrito.reduce((totalActual, itemCarrito) => {
 			const precioProducto = itemCarrito?.producto?.precio || 0;
@@ -107,9 +109,7 @@ export function Carrito() {
 							000100 CART-ACCESS-DIVISION
 						</p>
 						<div className="my-2 border-t border-dashed border-(--color-border)" />
-						<p className="text-xs font-bold uppercase">
-							[!] AUTH-REQUIRED: NECESITAS INICIAR SESION.
-						</p>
+						<p className="text-xs font-bold uppercase">{msg}</p>
 						<div className="my-2 border-t border-dashed border-(--color-border)" />
 						<Link
 							to="/login"

@@ -152,7 +152,6 @@ function TarjetaPedido({ pedido }) {
 
 function TelemetriaPedidos({ pedidos }) {
 	const totalGastado = pedidos.reduce((acc, p) => acc + (p.total || 0), 0);
-	const entregados = pedidos.filter((p) => p.estado === "entregado").length;
 	const enCurso = pedidos.filter(
 		(p) => p.estado === "procesando" || p.estado === "enviado",
 	).length;

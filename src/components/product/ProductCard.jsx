@@ -45,6 +45,14 @@ export function ProductCard({ producto, onAddToCart }) {
 				<p className="text-right text-sm font-bold text-(--color-black)">
 					{formatPrice(producto.precio)}
 				</p>
+				<div className="my-2 border-t border-dashed border-(--color-border)" />
+				<p className={`text-[10px] font-bold uppercase ${
+					producto.enStock
+						? "text-(--color-black)"
+						: "text-(--color-gray)"
+				}`}>
+					{producto.enStock ? "[*] EN-STOCK" : "[X] SIN-STOCK"}
+				</p>
 			</div>
 			{/* ACTIONS */}
 			<div className="flex border-t border-(--color-border)">
