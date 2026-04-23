@@ -1,9 +1,8 @@
-export function FieldLabel({ children }) {
+export function FieldLabel({ children, htmlFor }) {
 	return (
 		<label
-			className={
-				"mb-2 block text-sm font-medium text-(--color-gray-dark"
-			}>
+			htmlFor={htmlFor}
+			className={"mb-2 block text-sm font-medium text-(--color-gray-dark"}>
 			{children}
 		</label>
 	);

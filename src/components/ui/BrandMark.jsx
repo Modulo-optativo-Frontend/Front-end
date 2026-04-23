@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link } from "./Link.jsx";
 
 export function BrandMark({ to = "/", className = "" }) {
 	return (
 		<Link
 			to={to}
+			aria-label="SilverLine — Ir a inicio"
 			className={`inline-flex items-center gap-3 font-mono no-underline ${className}`.trim()}>
 			<span className="flex h-9 w-9 items-center justify-center border border-(--color-border) bg-[linear-gradient(135deg,var(--color-accent),var(--color-warning))] text-[11px] font-bold tracking-[0.25em] text-(--color-white) shadow-[0_0_22px_rgba(255,107,61,0.25)]">
 				SL

@@ -1,6 +1,10 @@
-import { Link } from "react-router-dom";
+import { Button } from "../ui/Button.jsx";
+import { Link } from "../ui/Link.jsx";
 
-function SiteHeader({ token, handleLogout }) {
+function SiteHeader({ token, handleLogout, dash }) {
+	const navButtonClasses =
+		"relative inline-flex min-h-[2.9rem] items-center justify-center gap-[0.65rem] border border-line bg-[rgba(11,21,46,0.66)] px-[1.15rem] py-3 font-['Oxanium','Arial_Narrow',sans-serif] text-[0.78rem] font-bold uppercase tracking-[0.18em] text-ink transition-[transform,border-color,background-color,color,box-shadow] duration-180 ease-in hover:-translate-y-px hover:border-signal/60 hover:bg-[rgba(14,28,60,0.88)] hover:text-signal";
+
 	return (
 		<header className="sl-header font-mono border-b border-(--color-border) bg-(--color-surface)">
 			<div className="border-b border-(--color-border) px-4 py-1">
@@ -11,6 +15,7 @@ function SiteHeader({ token, handleLogout }) {
 			<div className="flex w-full items-center justify-between px-4 py-2">
 				<Link
 					to="/"
+					variant="plain"
 					className="inline-flex items-center gap-2">
 					<span className="flex h-8 w-8 items-center justify-center border border-(--color-border) bg-(--color-black) text-xs font-bold text-(--color-white)">
 						SL
@@ -23,17 +28,18 @@ function SiteHeader({ token, handleLogout }) {
 				<nav className="hidden items-center gap-0 text-xs md:flex">
 					<a
 						href="#macs"
-						className="border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+						className={navButtonClasses}>
 						[MACBOOKS]
 					</a>
 					<a
 						href="#why"
-						className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+						className={`-ml-px ${navButtonClasses}`}>
 						[POR-QUE]
 					</a>
 					<Link
 						to="/catalogo"
-						className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+						variant="secondary"
+						className={`-ml-px ${navButtonClasses}`}>
 						[CATALOGO]
 					</Link>
 				</nav>
@@ -41,33 +47,43 @@ function SiteHeader({ token, handleLogout }) {
 				<div className="flex items-center gap-0 text-xs">
 					<Link
 						to="/carrito"
-						className="border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+						variant="secondary"
+						className="min-h-0 px-4 py-2 text-xs">
 						[CARRITO]
 					</Link>
 					{token ? (
 						<>
 							<Link
 								to="/mis-pedidos"
-								className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+								variant="secondary"
+								className="-ml-px min-h-0 px-4 py-2 text-xs">
 								[MIS PEDIDOS]
 							</Link>
-							<button
-								type="button"
+							<Button
+								variant="secondary"
 								onClick={handleLogout}
-								className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+								className="-ml-px min-h-0 px-4 py-2 text-xs">
 								[LOGOUT]
-							</button>
+							</Button>
+
+							<Button
+								onClick={dash}
+								className="-ml-px border border-(--color-border) px-5 py-2 text-xs font-bold uppercase">
+								[U] MI-CUENTA
+							</Button>
 						</>
 					) : (
 						<>
 							<Link
 								to="/login"
-								className="-ml-px border border-(--color-border) px-4 py-2 font-bold uppercase hover:bg-(--color-gray-light)">
+								variant="secondary"
+								className="-ml-px min-h-0 px-4 py-2 text-xs">
 								[LOGIN]
 							</Link>
 							<Link
 								to="/registro"
-								className="-ml-px border border-(--color-border) bg-(--color-accent) px-4 py-2 font-bold uppercase text-(--color-white) hover:bg-(--color-highlight) hover:text-(--color-black)">
+								variant="primary"
+								className="-ml-px min-h-0 px-4 py-2 text-xs">
 								[REGISTRO]
 							</Link>
 						</>

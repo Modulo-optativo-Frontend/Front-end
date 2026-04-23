@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button.jsx";
 import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
+import { Link } from "../components/ui/Link.jsx";
 import { apiFetch } from "../lib/api.js";
 import { getAuthToken, setAuthToken, setAuthUser } from "../lib/auth.js";
 
@@ -69,30 +70,37 @@ export function Login() {
 					className="p-6">
 					{/* EMAIL */}
 					<div className="mb-4">
-						<label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
+						<label
+							htmlFor="login-email"
+							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Correo electrónico
 						</label>
 						<input
+							id="login-email"
 							type="email"
 							value={emailUsuario}
 							onChange={(event) => setEmailUsuario(event.target.value)}
 							className="sl-input text-xs uppercase"
+							autoComplete="email"
 						/>
 					</div>
 
 					{/* PASSWORD */}
 					<div className="mb-4">
-						<label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
+						<label
+							htmlFor="login-password"
+							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Contraseña
 						</label>
 						<input
+							id="login-password"
 							type="password"
 							value={passwordUsuario}
 							onChange={(event) => setPasswordUsuario(event.target.value)}
 							className="sl-input text-xs"
+							autoComplete="current-password"
 						/>
 					</div>
-
 					{errorLogin ? (
 						<FeedbackMessage
 							message={errorLogin}
@@ -114,7 +122,7 @@ export function Login() {
 						¿No tienes cuenta?{" "}
 						<Link
 							to="/registro"
-							className="font-bold underline text-(--color-warning)">
+							variant="text">
 							Regístrate
 						</Link>
 					</p>

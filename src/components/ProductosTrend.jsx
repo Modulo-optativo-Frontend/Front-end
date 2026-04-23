@@ -1,5 +1,6 @@
 import { getProductoImageUrl } from "../lib/media.js";
 import { FeedbackMessage } from "./ui/FeedBackMessage.jsx";
+import { Button } from "./ui/Button.jsx";
 
 function ProductosTrend({
 	productosDestacados,
@@ -84,12 +85,12 @@ function ProductosTrend({
 											</span>
 										</div>
 										<div className="trend-cta">
-											<button
+											<Button
 												disabled={!producto.enStock}
 												onClick={() => handleAddToCart(producto._id)}
-												className="primary-btn w-full rounded-full px-3 py-1.5 text-xs text-white transition-colors hover:opacity-90 disabled:opacity-60">
+												className="min-h-0 w-full rounded-full px-3 py-1.5 text-xs">
 												Añadir al carrito
-											</button>
+											</Button>
 										</div>
 									</div>
 								</div>

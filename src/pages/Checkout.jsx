@@ -78,10 +78,12 @@ function IndicadorPasos({ pasoActual }) {
 	);
 }
 
-function Campo({ label, children }) {
+function Campo({ label, id, children }) {
 	return (
 		<div>
-			<label className="mb-2 block text-[11px] uppercase tracking-[0.24em] text-(--color-gray)">
+			<label
+				htmlFor={id}
+				className="mb-2 block text-[11px] uppercase tracking-[0.24em] text-(--color-gray)">
 				{label}
 			</label>
 			{children}
@@ -116,10 +118,10 @@ function PasoEntrega({
 			</div>
 
 			<div className="grid gap-3 md:grid-cols-2">
-				<button
-					type="button"
+				<Button
+					variant="secondary"
 					onClick={() => setMetodoEntrega("domicilio")}
-					className={`sl-panel p-4 text-left ${metodoEntrega === "domicilio" ? "border-[rgba(124,247,212,0.55)]" : ""}`}>
+					className={`sl-panel block min-h-0 w-full p-4 text-left normal-case tracking-normal ${metodoEntrega === "domicilio" ? "border-[rgba(124,247,212,0.55)]" : ""}`}>
 					<p className="text-[10px] uppercase tracking-[0.28em] text-(--color-gray)">
 						[D-01]
 					</p>
@@ -130,12 +132,12 @@ function PasoEntrega({
 						Recibe tu pedido en la direccion indicada con seguimiento y entrega
 						estandar.
 					</p>
-				</button>
+				</Button>
 
-				<button
-					type="button"
+				<Button
+					variant="secondary"
 					onClick={() => setMetodoEntrega("recogida")}
-					className={`sl-panel p-4 text-left ${metodoEntrega === "recogida" ? "border-[rgba(255,224,113,0.55)]" : ""}`}>
+					className={`sl-panel block min-h-0 w-full p-4 text-left normal-case tracking-normal ${metodoEntrega === "recogida" ? "border-[rgba(255,224,113,0.55)]" : ""}`}>
 					<p className="text-[10px] uppercase tracking-[0.28em] text-(--color-gray)">
 						[P-02]
 					</p>
@@ -145,27 +147,34 @@ function PasoEntrega({
 					<p className="sl-copy mt-2 text-sm">
 						Recoge tu pedido en una tienda SilverLine cuando mejor te venga.
 					</p>
-				</button>
+				</Button>
 			</div>
 
 			{metodoEntrega === "domicilio" ? (
 				<div className="sl-panel sl-gridlines p-5">
 					<div className="grid gap-4 md:grid-cols-3">
 						<div className="md:col-span-2">
-							<Campo label="Calle principal">
+							<Campo
+								label="Calle principal"
+								id="checkout-calle">
 								<input
+									id="checkout-calle"
 									type="text"
 									value={direccionEnvio.calle}
 									onChange={(e) =>
 										handleCampoDireccion("calle", e.target.value)
 									}
 									placeholder="Calle Gran Vía"
+									autoComplete="street-address"
 									className="sl-input"
 								/>
 							</Campo>
 						</div>
-						<Campo label="Número">
+						<Campo
+							label="Número"
+							id="checkout-numero">
 							<input
+								id="checkout-numero"
 								type="text"
 								value={direccionEnvio.numero}
 								onChange={(e) => handleCampoDireccion("numero", e.target.value)}
@@ -174,27 +183,38 @@ function PasoEntrega({
 							/>
 						</Campo>
 						<div className="md:col-span-3">
-							<Campo label="Piso o modulo">
+							<Campo
+								label="Piso o módulo"
+								id="checkout-piso">
 								<input
+									id="checkout-piso"
 									type="text"
 									value={direccionEnvio.piso}
 									onChange={(e) => handleCampoDireccion("piso", e.target.value)}
 									placeholder="2A"
+									autoComplete="address-line2"
 									className="sl-input"
 								/>
 							</Campo>
 						</div>
-						<Campo label="Ciudad">
+						<Campo
+							label="Ciudad"
+							id="checkout-ciudad">
 							<input
+								id="checkout-ciudad"
 								type="text"
 								value={direccionEnvio.ciudad}
 								onChange={(e) => handleCampoDireccion("ciudad", e.target.value)}
 								placeholder="Madrid"
+								autoComplete="address-level2"
 								className="sl-input"
 							/>
 						</Campo>
-						<Campo label="Código postal">
+						<Campo
+							label="Código postal"
+							id="checkout-cp">
 							<input
+								id="checkout-cp"
 								type="text"
 								inputMode="numeric"
 								value={direccionEnvio.codigoPostal}
@@ -205,6 +225,7 @@ function PasoEntrega({
 									)
 								}
 								placeholder="28013"
+								autoComplete="postal-code"
 								className="sl-input"
 							/>
 						</Campo>
@@ -213,11 +234,11 @@ function PasoEntrega({
 			) : (
 				<div className="grid gap-3">
 					{PUNTOS_RECOGIDA.map((punto) => (
-						<button
+						<Button
 							key={punto.id}
-							type="button"
+							variant="secondary"
 							onClick={() => setPuntoRecogidaSeleccionado(punto.id)}
-							className={`sl-panel p-4 text-left ${puntoRecogidaSeleccionado === punto.id ? "border-[rgba(124,247,212,0.55)]" : ""}`}>
+							className={`sl-panel block min-h-0 w-full p-4 text-left normal-case tracking-normal ${puntoRecogidaSeleccionado === punto.id ? "border-[rgba(124,247,212,0.55)]" : ""}`}>
 							<div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
 								<div>
 									<p className="sl-display text-base font-semibold">
@@ -229,7 +250,7 @@ function PasoEntrega({
 									{punto.horario}
 								</p>
 							</div>
-						</button>
+						</Button>
 					))}
 				</div>
 			)}

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button.jsx";
 import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
+import { Link } from "../components/ui/Link.jsx";
 import { apiFetch } from "../lib/api.js";
 import { getAuthToken, setAuthToken, setAuthUser } from "../lib/auth.js";
 
@@ -74,43 +75,54 @@ export function Registro() {
 					className="p-6">
 					{/* NOMBRE */}
 					<div className="mb-4">
-						<label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
+						<label
+							htmlFor="reg-nombre"
+							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Nombre
 						</label>
 						<input
+							id="reg-nombre"
 							type="text"
 							value={nombreUsuario}
 							onChange={(event) => setNombreUsuario(event.target.value)}
 							className="sl-input text-xs uppercase"
+							autoComplete="name"
 						/>
 					</div>
 
 					{/* EMAIL */}
 					<div className="mb-4">
-						<label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
+						<label
+							htmlFor="reg-email"
+							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Correo electrónico
 						</label>
 						<input
+							id="reg-email"
 							type="email"
 							value={emailUsuario}
 							onChange={(event) => setEmailUsuario(event.target.value)}
 							className="sl-input text-xs uppercase"
+							autoComplete="email"
 						/>
 					</div>
 
 					{/* PASSWORD */}
 					<div className="mb-4">
-						<label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
+						<label
+							htmlFor="reg-password"
+							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Contraseña
 						</label>
 						<input
+							id="reg-password"
 							type="password"
 							value={passwordUsuario}
 							onChange={(event) => setPasswordUsuario(event.target.value)}
 							className="sl-input text-xs"
+							autoComplete="new-password"
 						/>
 					</div>
-
 					{errorRegistro ? (
 						<FeedbackMessage
 							message={errorRegistro}
@@ -132,7 +144,7 @@ export function Registro() {
 						¿Ya tienes cuenta?{" "}
 						<Link
 							to="/login"
-							className="font-bold underline text-(--color-warning)">
+							variant="text">
 							Inicia sesión
 						</Link>
 					</p>

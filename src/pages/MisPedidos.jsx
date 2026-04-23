@@ -100,14 +100,14 @@ function TarjetaPedido({ pedido }) {
 						<span className="text-sm font-semibold text-(--color-warning)">
 							{formatPrice(pedido.total)}
 						</span>
-						<button
-							type="button"
+						<Button
 							onClick={() => setExpandido((v) => !v)}
-							className="text-[10px] uppercase tracking-[0.24em] text-(--color-gray) hover:text-(--color-signal) transition-colors">
+							variant="secondary"
+							className="min-h-0 border-0 bg-transparent px-0 py-0 text-[10px] tracking-[0.24em] text-(--color-gray) shadow-none hover:bg-transparent hover:text-(--color-signal)">
 							{expandido
 								? "Ocultar"
 								: `Ver ${totalProductos} producto${totalProductos !== 1 ? "s" : ""}`}
-						</button>
+						</Button>
 					</div>
 				</div>
 

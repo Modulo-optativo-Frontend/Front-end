@@ -1,5 +1,6 @@
 import { getProductoImageUrl } from "../../lib/media.js";
 import { FeedbackMessage } from "../ui/FeedBackMessage.jsx";
+import { Button } from "../ui/Button.jsx";
 
 function TrendingProductsSection({
 	productosDestacados,
@@ -15,7 +16,9 @@ function TrendingProductsSection({
 			id="macs"
 			className="font-mono border-b border-(--color-border)">
 			{/* 000400 TRENDING-DIVISION */}
-			<div className="border-b border-(--color-border) px-4 py-2 flex items-center justify-between">
+			<div
+				aria-hidden="true"
+				className="border-b border-(--color-border) px-4 py-2 flex items-center justify-between">
 				<p className="text-xs font-bold uppercase">
 					000400 TRENDING-PRODUCTS-DIVISION
 				</p>
@@ -34,9 +37,15 @@ function TrendingProductsSection({
 			) : null}
 
 			{isLoadingProductos ? (
-				<div className="px-4 py-4">
+				<div
+					className="px-4 py-4"
+					role="status"
+					aria-live="polite">
 					<p className="text-xs uppercase">
-						[ ] LOADING PRODUCT-RECORDS.................................
+						<span className="sr-only">Cargando productos...</span>
+						<span aria-hidden="true">
+							[ ] LOADING PRODUCT-RECORDS.................................
+						</span>
 					</p>
 				</div>
 			) : productosError ? (
@@ -105,12 +114,17 @@ function TrendingProductsSection({
 									</p>
 								</div>
 								{/* cta */}
-								<button
+								<Button
 									disabled={!producto.enStock}
 									onClick={() => handleAddToCart(producto._id)}
-									className="primary-btn border-t border-(--color-border) w-full px-3 py-2 text-xs font-bold uppercase text-(--color-white) bg-(--color-accent) hover:bg-(--color-highlight) hover:text-(--color-black) disabled:opacity-50">
+									ariaLabel={
+										producto.enStock
+											? `Añadir ${producto.nombre} al carrito`
+											: `${producto.nombre} sin stock`
+									}
+									className="min-h-0 w-full rounded-none border-0 border-t border-(--color-border) px-3 py-2 text-xs">
 									{producto.enStock ? "[+] ADD-TO-CART" : "[X] OUT-OF-STOCK"}
-								</button>
+								</Button>
 							</div>
 						);
 					})}

@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SiteHeader } from "../components/layout/SiteHeader.jsx";
 import { SiteFooter } from "../components/layout/SiteFooter.jsx";
 import { Button } from "../components/ui/Button.jsx";
 import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
+import { Link } from "../components/ui/Link.jsx";
 import { apiFetch } from "../lib/api.js";
 import { clearAuth, getAuthToken } from "../lib/auth.js";
 
@@ -113,7 +114,8 @@ export function Carrito() {
 						<div className="my-2 border-t border-dashed border-(--color-border)" />
 						<Link
 							to="/login"
-							className="text-xs font-bold uppercase underline">
+							variant="text"
+							className="text-xs">
 							[&gt;] IR-A-LOGIN
 						</Link>
 					</div>

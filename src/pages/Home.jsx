@@ -62,7 +62,6 @@ function Home() {
 		} catch (error) {
 			const mensajes = {
 				"token requerido": "Debes iniciar sesión para añadir productos",
-				
 			};
 			setCartMessage(
 				mensajes[error.message] ??
@@ -70,6 +69,13 @@ function Home() {
 					"No se pudo añadir el producto.",
 			);
 		}
+	}
+
+	function goToDash(token) {
+		if (!token) {
+			return;
+		}
+		navigate("./DashboardUser.jsx");
 	}
 
 	function handleLogout() {
@@ -85,6 +91,7 @@ function Home() {
 			<SiteHeader
 				token={token}
 				handleLogout={handleLogout}
+				dash={goToDash}
 			/>
 
 			<main>

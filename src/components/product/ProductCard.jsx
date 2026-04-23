@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { Button } from "../ui/Button.jsx";
+import { Link } from "../ui/Link.jsx";
 import { getProductoImageUrl } from "../../lib/media.js";
 
 function formatPrice(precioProducto) {
@@ -15,7 +15,9 @@ export function ProductCard({ producto, onAddToCart }) {
 	return (
 		<div className="font-mono flex flex-col border border-(--color-border) bg-(--color-surface)">
 			{/* HEADER ROW */}
-			<div className="border-b border-(--color-border) px-2 py-1">
+			<div
+				aria-hidden="true"
+				className="border-b border-(--color-border) px-2 py-1">
 				<p className="text-[10px] font-bold uppercase text-(--color-black)">
 					PROD-REC
 				</p>
@@ -46,12 +48,12 @@ export function ProductCard({ producto, onAddToCart }) {
 					{formatPrice(producto.precio)}
 				</p>
 				<div className="my-2 border-t border-dashed border-(--color-border)" />
-				<p className={`text-[10px] font-bold uppercase ${
-					producto.enStock
-						? "text-(--color-black)"
-						: "text-(--color-gray)"
-				}`}>
-					{producto.enStock ? "[*] EN-STOCK" : "[X] SIN-STOCK"}
+				<p
+					className={`text-[10px] font-bold uppercase ${
+						producto.enStock ? "text-(--color-black)" : "text-(--color-gray)"
+					}`}>
+					<span aria-hidden="true">{producto.enStock ? "[*] " : "[X] "}</span>
+					{producto.enStock ? "EN-STOCK" : "SIN-STOCK"}
 				</p>
 			</div>
 			{/* ACTIONS */}
@@ -59,12 +61,19 @@ export function ProductCard({ producto, onAddToCart }) {
 				<Button
 					onClick={() => onAddToCart(producto._id)}
 					disabled={!producto.enStock}
+					ariaLabel={
+						producto.enStock
+							? `Añadir ${producto.nombre} al carrito`
+							: `${producto.nombre} sin stock`
+					}
 					className="flex-1 border-0 border-r border-(--color-border)">
 					{producto.enStock ? "[+] CART" : "[X] STOCK"}
 				</Button>
 				<Link
 					to={`/detalle/${producto._id}`}
-					className="flex-1 border-0 px-4 py-2 text-center text-xs font-bold uppercase bg-(--color-surface) text-(--color-black) hover:bg-(--color-gray-light)">
+					variant="secondary"
+					aria-label={`Ver detalle de ${producto.nombre}`}
+					className="min-h-0 flex-1 border-0 px-4 py-2 text-center text-xs">
 					[i] VER
 				</Link>
 			</div>

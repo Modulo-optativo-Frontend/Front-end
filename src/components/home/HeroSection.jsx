@@ -1,10 +1,16 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/Button.jsx";
 
 function HeroSection({ heroImageUrl }) {
+	const navigate = useNavigate();
 	return (
-		<section className="font-mono border-b border-(--color-border)">
+		<section
+			aria-label="Hero — MacBooks reacondicionados"
+			className="font-mono border-b border-(--color-border)">
 			{/* 000200 HERO-IDENTIFICATION-DIVISION */}
-			<div className="border-b border-(--color-border) px-4 py-2">
+			<div
+				aria-hidden="true"
+				className="border-b border-(--color-border) px-4 py-2">
 				<p className="text-xs font-bold uppercase">
 					000200 HERO-IDENTIFICATION-DIVISION
 				</p>
@@ -17,7 +23,9 @@ function HeroSection({ heroImageUrl }) {
 				{/* TEXT COLUMN */}
 				<div className="w-1/2 border-r border-(--color-border) p-8 flex flex-col justify-between">
 					<div>
-						<p className="text-xs font-bold uppercase mb-2">
+						<p
+							aria-hidden="true"
+							className="text-xs font-bold uppercase mb-2">
 							FIELD: TAGLINE-DATA
 						</p>
 						<div className="border-t border-dashed border-(--color-border) mb-4" />
@@ -29,31 +37,37 @@ function HeroSection({ heroImageUrl }) {
 							LISTOS PARA CREAR.
 						</h1>
 						<p className="hero-subtitle mt-4 text-xs uppercase">
-							[ ] CERTIFICADO. CONECTAR Y CREAR.
+							<span aria-hidden="true">[ ] </span>CERTIFICADO. CONECTAR Y CREAR.
 						</p>
 					</div>
 					<div className="mt-8 border-t border-dashed border-(--color-border) pt-4">
-						<p className="text-xs font-bold uppercase mb-3">
+						<p
+							aria-hidden="true"
+							className="text-xs font-bold uppercase mb-3">
 							000220 CTA-ACTION-SECTION
 						</p>
 						<div className="flex gap-0">
-							<Link
-								to="/catalogo"
-								className="primary-btn border border-(--color-border) bg-(--color-accent) px-5 py-2 text-xs font-bold uppercase text-white hover:bg-(--color-highlight) hover:text-black">
+							<Button
+								onClick={() => navigate("/catalogo")}
+								ariaLabel="Ir al catálogo"
+								className="border border-(--color-border) px-5 py-2 text-xs font-bold uppercase">
 								[+] IR-AL-CATALOGO
-							</Link>
-							<button
-								type="button"
-								className="secondary-btn -ml-px border border-(--color-border) px-5 py-2 text-xs font-bold uppercase hover:bg-(--color-gray-light)">
+							</Button>
+							<Button
+								variant="secondary"
+								ariaLabel="Cómo revisamos los productos"
+								className="-ml-px border border-(--color-border) px-5 py-2 text-xs font-bold uppercase">
 								[?] COMO-REVISAMOS
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>
 
 				{/* IMAGE COLUMN */}
 				<div className="w-1/2 flex flex-col">
-					<div className="border-b border-(--color-border) px-4 py-1">
+					<div
+						aria-hidden="true"
+						className="border-b border-(--color-border) px-4 py-1">
 						<p className="text-xs font-bold uppercase">
 							000230 IMAGE-DATA-SECTION........ REF: HERO-IMG-01
 						</p>
@@ -68,7 +82,9 @@ function HeroSection({ heroImageUrl }) {
 								className="absolute inset-0 h-full w-full object-cover"
 							/>
 						) : (
-							<div className="flex h-full items-center justify-center text-xs uppercase tracking-widest">
+							<div
+								aria-hidden="true"
+								className="flex h-full items-center justify-center text-xs uppercase tracking-widest">
 								[NO-IMAGE-DATA]
 							</div>
 						)}

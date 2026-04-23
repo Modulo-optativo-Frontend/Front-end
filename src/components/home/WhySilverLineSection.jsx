@@ -2,15 +2,20 @@ function WhySilverLineSection() {
 	return (
 		<section
 			id="why"
+			aria-label="Por qué SilverLine"
 			className="font-mono border-b border-(--color-border)">
-			<div className="border-b border-(--color-border) px-4 py-2">
+			<div
+				aria-hidden="true"
+				className="border-b border-(--color-border) px-4 py-2">
 				<p className="text-xs font-bold uppercase">
 					000800 WHY-SILVERLINE-DIVISION
 				</p>
 			</div>
 			<div className="flex border-b border-(--color-border)">
 				<div className="w-1/3 border-r border-black p-6">
-					<p className="text-xs font-bold uppercase mb-2">
+					<p
+						aria-hidden="true"
+						className="text-xs font-bold uppercase mb-2">
 						FIELD: DESCRIPCION-MODULO
 					</p>
 					<div className="border-t border-dashed border-black mb-3" />
@@ -20,7 +25,11 @@ function WhySilverLineSection() {
 					</p>
 				</div>
 				<div className="w-1/3 border-r border-black p-6">
-					<p className="text-xs font-bold uppercase mb-2">FIELD: SERVICIOS-A</p>
+					<p
+						aria-hidden="true"
+						className="text-xs font-bold uppercase mb-2">
+						FIELD: SERVICIOS-A
+					</p>
 					<div className="border-t border-dashed border-black mb-3" />
 					<div className="space-y-3 text-xs uppercase leading-relaxed">
 						<p>
@@ -34,7 +43,11 @@ function WhySilverLineSection() {
 					</div>
 				</div>
 				<div className="w-1/3 p-6">
-					<p className="text-xs font-bold uppercase mb-2">FIELD: SERVICIOS-B</p>
+					<p
+						aria-hidden="true"
+						className="text-xs font-bold uppercase mb-2">
+						FIELD: SERVICIOS-B
+					</p>
 					<div className="border-t border-dashed border-black mb-3" />
 					<div className="space-y-3 text-xs uppercase leading-relaxed">
 						<p>

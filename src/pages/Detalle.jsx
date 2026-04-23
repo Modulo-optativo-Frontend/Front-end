@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SiteHeader } from "../components/layout/SiteHeader.jsx";
 import { SiteFooter } from "../components/layout/SiteFooter.jsx";
 import { Button } from "../components/ui/Button.jsx";
 import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
+import { Link } from "../components/ui/Link.jsx";
 import { apiFetch } from "../lib/api.js";
 import { clearAuth, getAuthToken } from "../lib/auth.js";
 import { getProductoImageUrl } from "../lib/media.js";
@@ -111,7 +112,8 @@ export function Detalle() {
 						<div className="my-2 border-t border-dashed border-(--color-border)" />
 						<Link
 							to="/catalogo"
-							className="text-xs font-bold uppercase underline">
+							variant="text"
+							className="text-xs">
 							[&lt;] RETURN-TO-CATALOG-INDEX
 						</Link>
 					</div>
@@ -145,6 +147,7 @@ export function Detalle() {
 				<div className="-mt-px border border-(--color-border) px-4 py-2 flex items-center justify-between">
 					<Link
 						to="/catalogo"
+						variant="plain"
 						className="text-xs font-bold uppercase">
 						[&lt;] RETURN-TO-CATALOG-INDEX
 					</Link>
