@@ -27,5 +27,5 @@ dist-ssr
 
 
 .codex
-.agents
+.agents/*
 skills-lock.json
