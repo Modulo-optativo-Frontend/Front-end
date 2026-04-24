@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { SiteHeader } from "../components/layout/SiteHeader.jsx";
-import { SiteFooter } from "../components/layout/SiteFooter.jsx";
-import { Button } from "../components/ui/Button.jsx";
-import { getAuthToken, clearAuth } from "../lib/auth.js";
+import { SiteHeader } from "../../components/layout/SiteHeader.jsx";
+import { SiteFooter } from "../../components/layout/SiteFooter.jsx";
+import { Button } from "../../components/ui/Button.jsx";
+import { getAuthToken, clearAuth } from "../../lib/auth.js";
 
 export function CheckoutSuccess() {
 	const navigate = useNavigate();

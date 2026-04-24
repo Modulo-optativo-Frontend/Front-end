@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "../ui/Button.jsx";
+import { Button } from "../../components/ui/Button.jsx";
 
 function HeroSection({ heroImageUrl }) {
 	const navigate = useNavigate();

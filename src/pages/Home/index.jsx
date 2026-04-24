@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SiteHeader } from "../components/layout/SiteHeader.jsx";
-import HeroSection from "../components/home/HeroSection.jsx";
-import { TrendingProductsSection } from "../components/product/TrendingProductsSection.jsx";
-import WhySilverLineSection from "../components/home/WhySilverLineSection.jsx";
-import { SiteFooter } from "../components/layout/SiteFooter.jsx";
-import { apiFetch } from "../lib/api.js";
-import { clearAuth, getAuthToken } from "../lib/auth.js";
-import { getProductoImageUrl } from "../lib/media.js";
+import { SiteHeader } from "../../components/layout/SiteHeader.jsx";
+import HeroSection from "./HeroSection.jsx";
+import { TrendingProductsSection } from "../../components/product/TrendingProductsSection.jsx";
+import WhySilverLineSection from "./WhySilverLineSection.jsx";
+import { SiteFooter } from "../../components/layout/SiteFooter.jsx";
+import { apiFetch } from "../../lib/api.js";
+import { clearAuth, getAuthToken } from "../../lib/auth.js";
+import { getProductoImageUrl } from "../../lib/media.js";
 
 function Home() {
 	const navigate = useNavigate();

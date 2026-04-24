@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/Button.jsx";
-import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
-import { Link } from "../components/ui/Link.jsx";
-import { apiFetch } from "../lib/api.js";
-import { getAuthToken, setAuthToken, setAuthUser } from "../lib/auth.js";
+import { Button } from "../../components/ui/Button.jsx";
+import { FeedbackMessage } from "../../components/ui/FeedBackMessage.jsx";
+import { Link } from "../../components/ui/Link.jsx";
+import { apiFetch } from "../../lib/api.js";
+import { getAuthToken, setAuthToken, setAuthUser } from "../../lib/auth.js";
 
-export function Registro() {
+export function Login() {
 	const navigate = useNavigate();
-	const [nombreUsuario, setNombreUsuario] = useState("");
 	const [emailUsuario, setEmailUsuario] = useState("");
 	const [passwordUsuario, setPasswordUsuario] = useState("");
-	const [errorRegistro, setErrorRegistro] = useState("");
+	const [errorLogin, setErrorLogin] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
@@ -20,38 +19,34 @@ export function Registro() {
 		}
 	}, [navigate]);
 
-	async function handleRegistroSubmit(event) {
+	async function handleLoginSubmit(event) {
 		event.preventDefault();
-		setErrorRegistro("");
+		setErrorLogin("");
 
-		if (!nombreUsuario || !emailUsuario || !passwordUsuario) {
-			setErrorRegistro("Nombre, email y contraseña son obligatorios");
+		if (!emailUsuario || !passwordUsuario) {
+			setErrorLogin("Email y contraseña son obligatorios");
 			return;
 		}
 
 		setIsSubmitting(true);
 
 		try {
-			const response = await apiFetch("/api/usuarios/registrar", {
+			const response = await apiFetch("/api/usuarios/login", {
 				method: "POST",
 				body: {
-					name: nombreUsuario,
 					email: emailUsuario,
 					password: passwordUsuario,
 				},
 			});
 
 			const tokenRespuesta = response?.data?.token;
-			const nombreRespuesta = response?.data?.nombre;
+			const usuarioRespuesta = response?.data?.usuario;
 
 			setAuthToken(tokenRespuesta);
-			setAuthUser({
-				name: nombreRespuesta || nombreUsuario,
-				email: emailUsuario,
-			});
+			setAuthUser(usuarioRespuesta || { email: emailUsuario });
 			navigate("/");
 		} catch (error) {
-			setErrorRegistro(error.message || "No se pudo crear la cuenta");
+			setErrorLogin(error.message || "No se pudo iniciar sesión");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -63,42 +58,25 @@ export function Registro() {
 				{/* HEADER */}
 				<div className="border-b border-(--color-border) p-3">
 					<p className="text-xs font-bold uppercase tracking-[0.2em] text-(--color-warning)">
-						Crear cuenta
+						Iniciar sesión
 					</p>
 					<p className="mt-1 text-xs tracking-[0.08em] text-(--color-gray)">
-						Regístrate para guardar tu pedido y comprar más rápido.
+						Accede a tu cuenta para continuar con tu compra.
 					</p>
 				</div>
 
 				<form
-					onSubmit={handleRegistroSubmit}
+					onSubmit={handleLoginSubmit}
 					className="p-6">
-					{/* NOMBRE */}
-					<div className="mb-4">
-						<label
-							htmlFor="reg-nombre"
-							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
-							Nombre
-						</label>
-						<input
-							id="reg-nombre"
-							type="text"
-							value={nombreUsuario}
-							onChange={(event) => setNombreUsuario(event.target.value)}
-							className="sl-input text-xs uppercase"
-							autoComplete="name"
-						/>
-					</div>
-
 					{/* EMAIL */}
 					<div className="mb-4">
 						<label
-							htmlFor="reg-email"
+							htmlFor="login-email"
 							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Correo electrónico
 						</label>
 						<input
-							id="reg-email"
+							id="login-email"
 							type="email"
 							value={emailUsuario}
 							onChange={(event) => setEmailUsuario(event.target.value)}
@@ -110,22 +88,22 @@ export function Registro() {
 					{/* PASSWORD */}
 					<div className="mb-4">
 						<label
-							htmlFor="reg-password"
+							htmlFor="login-password"
 							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Contraseña
 						</label>
 						<input
-							id="reg-password"
+							id="login-password"
 							type="password"
 							value={passwordUsuario}
 							onChange={(event) => setPasswordUsuario(event.target.value)}
 							className="sl-input text-xs"
-							autoComplete="new-password"
+							autoComplete="current-password"
 						/>
 					</div>
-					{errorRegistro ? (
+					{errorLogin ? (
 						<FeedbackMessage
-							message={errorRegistro}
+							message={errorLogin}
 							successMatch="__no_match__"
 							className="mb-4 text-xs"
 						/>
@@ -135,17 +113,17 @@ export function Registro() {
 						type="submit"
 						disabled={isSubmitting}
 						className="w-full">
-						{isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
+						{isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
 					</Button>
 				</form>
 
 				<div className="border-t border-dashed border-(--color-border) px-6 py-3">
 					<p className="text-xs text-(--color-gray)">
-						¿Ya tienes cuenta?{" "}
+						¿No tienes cuenta?{" "}
 						<Link
-							to="/login"
+							to="/registro"
 							variant="text">
-							Inicia sesión
+							Regístrate
 						</Link>
 					</p>
 				</div>

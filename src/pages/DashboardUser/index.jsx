@@ -1,10 +1,10 @@
-import { SiteHeader } from "../components/layout/SiteHeader.jsx";
-import { SiteFooter } from "../components/layout/SiteFooter.jsx";
+import { SiteHeader } from "../../components/layout/SiteHeader.jsx";
+import { SiteFooter } from "../../components/layout/SiteFooter.jsx";
 import { useNavigate } from "react-router-dom";
-import { clearAuth, getAuthToken, getAuthUser } from "../lib/auth.js";
-import { Button } from "../components/ui/Button.jsx";
+import { clearAuth, getAuthToken, getAuthUser } from "../../lib/auth.js";
+import { Button } from "../../components/ui/Button.jsx";
 import { useEffect, useState } from "react";
-import { apiFetch } from "../lib/api.js";
+import { apiFetch } from "../../lib/api.js";
 
 // UTILIDAD: recibe una fecha en formato ISO y la devuelve formateada en español
 // Ej: "2024-03-15T10:00:00Z" → "15 mar 2024"

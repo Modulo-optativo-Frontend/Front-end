@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { SiteHeader } from "../components/layout/SiteHeader.jsx";
-import { SiteFooter } from "../components/layout/SiteFooter.jsx";
-import { Button } from "../components/ui/Button.jsx";
-import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
-import { Link } from "../components/ui/Link.jsx";
-import { apiFetch } from "../lib/api.js";
-import { clearAuth, getAuthToken } from "../lib/auth.js";
-import { getProductoImageUrl } from "../lib/media.js";
+import { SiteHeader } from "../../components/layout/SiteHeader.jsx";
+import { SiteFooter } from "../../components/layout/SiteFooter.jsx";
+import { Button } from "../../components/ui/Button.jsx";
+import { FeedbackMessage } from "../../components/ui/FeedBackMessage.jsx";
+import { Link } from "../../components/ui/Link.jsx";
+import { apiFetch } from "../../lib/api.js";
+import { clearAuth, getAuthToken } from "../../lib/auth.js";
+import { getProductoImageUrl } from "../../lib/media.js";
 
 export function Detalle() {
 	const { id } = useParams();

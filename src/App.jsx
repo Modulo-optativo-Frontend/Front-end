@@ -6,8 +6,8 @@ import { Carrito } from "./pages/Carrito";
 import { Login } from "./pages/Login";
 import { Registro } from "./pages/Registro";
 import { Checkout } from "./pages/Checkout";
-import { CheckoutSuccess } from "./pages/CheckoutSuccess";
-import { CheckoutCancel } from "./pages/CheckoutCancel";
+import { CheckoutSuccess } from "./pages/Checkout/CheckoutSuccess";
+import { CheckoutCancel } from "./pages/Checkout/CheckoutCancel";
 import { MisPedidos } from "./pages/MisPedidos";
 import DashboardUser from "./pages/DashboardUser";
 

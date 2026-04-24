@@ -1,8 +1,8 @@
-import { getProductoImageUrl } from "../lib/media.js";
-import { FeedbackMessage } from "./ui/FeedBackMessage.jsx";
-import { Button } from "./ui/Button.jsx";
+import { getProductoImageUrl } from "../../lib/media.js";
+import { FeedbackMessage } from "../ui/FeedBackMessage.jsx";
+import { Button } from "../ui/Button.jsx";
 
-function ProductosTrend({
+export function ProductosTrend({
 	productosDestacados,
 	productos,
 	cartMessage,
@@ -12,7 +12,9 @@ function ProductosTrend({
 	handleAddToCart,
 }) {
 	return (
-		<section id="macs" className="border-b border-(--color-border)">
+		<section
+			id="macs"
+			className="border-b border-(--color-border)">
 			<div className="mx-auto max-w-6xl px-4 py-12">
 				<div className="mb-6 flex items-center justify-between">
 					<h2 className="text-(--color-gray-dark) text-sm font-semibold uppercase tracking-[0.22em]">
@@ -38,15 +40,21 @@ function ProductosTrend({
 						successMatch="__no_match__"
 					/>
 				) : productos.length === 0 ? (
-					<p className="text-(--color-gray) text-sm">No hay productos disponibles ahora mismo.</p>
+					<p className="text-(--color-gray) text-sm">
+						No hay productos disponibles ahora mismo.
+					</p>
 				) : (
 					<div className="trend-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
 						{productosDestacados.map((producto) => {
 							const urlImagenProducto = getProductoImageUrl(producto);
 							const detalleProducto = [
 								producto.modelo,
-								producto.almacenamientoGb ? `${producto.almacenamientoGb} GB` : null,
-								producto.memoriaRamGb ? `${producto.memoriaRamGb} GB RAM` : null,
+								producto.almacenamientoGb
+									? `${producto.almacenamientoGb} GB`
+									: null,
+								producto.memoriaRamGb
+									? `${producto.memoriaRamGb} GB RAM`
+									: null,
 							]
 								.filter(Boolean)
 								.join(" · ");
@@ -61,7 +69,9 @@ function ProductosTrend({
 								<div
 									key={producto._id}
 									className="product-card group flex flex-col gap-4 rounded-2xl border border-(--color-border) bg-[rgba(255,255,255,0.6)] p-4 transition-all hover:shadow-lg">
-									<div className="relative overflow-hidden rounded-xl bg-(--color-gray-light)" style={{ aspectRatio: "4/3" }}>
+									<div
+										className="relative overflow-hidden rounded-xl bg-(--color-gray-light)"
+										style={{ aspectRatio: "4/3" }}>
 										{urlImagenProducto ? (
 											<img
 												src={urlImagenProducto}
@@ -75,9 +85,13 @@ function ProductosTrend({
 										</span>
 									</div>
 									<div className="trend-card-content">
-										<h3 className="text-sm font-medium text-black">{producto.nombre}</h3>
+										<h3 className="text-sm font-medium text-black">
+											{producto.nombre}
+										</h3>
 										<p className="text-(--color-gray) text-xs">
-											{detalleProducto || producto.descripcion || "Especificaciones disponibles"}
+											{detalleProducto ||
+												producto.descripcion ||
+												"Especificaciones disponibles"}
 										</p>
 										<div className="trend-price">
 											<span className="text-sm font-semibold text-black">
@@ -102,5 +116,3 @@ function ProductosTrend({
 		</section>
 	);
 }
-
-export default ProductosTrend;

@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/Button.jsx";
-import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
-import { Link } from "../components/ui/Link.jsx";
-import { apiFetch } from "../lib/api.js";
-import { getAuthToken, setAuthToken, setAuthUser } from "../lib/auth.js";
+import { Button } from "../../components/ui/Button.jsx";
+import { FeedbackMessage } from "../../components/ui/FeedBackMessage.jsx";
+import { Link } from "../../components/ui/Link.jsx";
+import { apiFetch } from "../../lib/api.js";
+import { getAuthToken, setAuthToken, setAuthUser } from "../../lib/auth.js";
 
-export function Login() {
+export function Registro() {
 	const navigate = useNavigate();
+	const [nombreUsuario, setNombreUsuario] = useState("");
 	const [emailUsuario, setEmailUsuario] = useState("");
 	const [passwordUsuario, setPasswordUsuario] = useState("");
-	const [errorLogin, setErrorLogin] = useState("");
+	const [errorRegistro, setErrorRegistro] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
@@ -19,34 +20,38 @@ export function Login() {
 		}
 	}, [navigate]);
 
-	async function handleLoginSubmit(event) {
+	async function handleRegistroSubmit(event) {
 		event.preventDefault();
-		setErrorLogin("");
+		setErrorRegistro("");
 
-		if (!emailUsuario || !passwordUsuario) {
-			setErrorLogin("Email y contraseña son obligatorios");
+		if (!nombreUsuario || !emailUsuario || !passwordUsuario) {
+			setErrorRegistro("Nombre, email y contraseña son obligatorios");
 			return;
 		}
 
 		setIsSubmitting(true);
 
 		try {
-			const response = await apiFetch("/api/usuarios/login", {
+			const response = await apiFetch("/api/usuarios/registrar", {
 				method: "POST",
 				body: {
+					name: nombreUsuario,
 					email: emailUsuario,
 					password: passwordUsuario,
 				},
 			});
 
 			const tokenRespuesta = response?.data?.token;
-			const usuarioRespuesta = response?.data?.usuario;
+			const nombreRespuesta = response?.data?.nombre;
 
 			setAuthToken(tokenRespuesta);
-			setAuthUser(usuarioRespuesta || { email: emailUsuario });
+			setAuthUser({
+				name: nombreRespuesta || nombreUsuario,
+				email: emailUsuario,
+			});
 			navigate("/");
 		} catch (error) {
-			setErrorLogin(error.message || "No se pudo iniciar sesión");
+			setErrorRegistro(error.message || "No se pudo crear la cuenta");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -58,25 +63,42 @@ export function Login() {
 				{/* HEADER */}
 				<div className="border-b border-(--color-border) p-3">
 					<p className="text-xs font-bold uppercase tracking-[0.2em] text-(--color-warning)">
-						Iniciar sesión
+						Crear cuenta
 					</p>
 					<p className="mt-1 text-xs tracking-[0.08em] text-(--color-gray)">
-						Accede a tu cuenta para continuar con tu compra.
+						Regístrate para guardar tu pedido y comprar más rápido.
 					</p>
 				</div>
 
 				<form
-					onSubmit={handleLoginSubmit}
+					onSubmit={handleRegistroSubmit}
 					className="p-6">
+					{/* NOMBRE */}
+					<div className="mb-4">
+						<label
+							htmlFor="reg-nombre"
+							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
+							Nombre
+						</label>
+						<input
+							id="reg-nombre"
+							type="text"
+							value={nombreUsuario}
+							onChange={(event) => setNombreUsuario(event.target.value)}
+							className="sl-input text-xs uppercase"
+							autoComplete="name"
+						/>
+					</div>
+
 					{/* EMAIL */}
 					<div className="mb-4">
 						<label
-							htmlFor="login-email"
+							htmlFor="reg-email"
 							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Correo electrónico
 						</label>
 						<input
-							id="login-email"
+							id="reg-email"
 							type="email"
 							value={emailUsuario}
 							onChange={(event) => setEmailUsuario(event.target.value)}
@@ -88,22 +110,22 @@ export function Login() {
 					{/* PASSWORD */}
 					<div className="mb-4">
 						<label
-							htmlFor="login-password"
+							htmlFor="reg-password"
 							className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-(--color-gray)">
 							Contraseña
 						</label>
 						<input
-							id="login-password"
+							id="reg-password"
 							type="password"
 							value={passwordUsuario}
 							onChange={(event) => setPasswordUsuario(event.target.value)}
 							className="sl-input text-xs"
-							autoComplete="current-password"
+							autoComplete="new-password"
 						/>
 					</div>
-					{errorLogin ? (
+					{errorRegistro ? (
 						<FeedbackMessage
-							message={errorLogin}
+							message={errorRegistro}
 							successMatch="__no_match__"
 							className="mb-4 text-xs"
 						/>
@@ -113,17 +135,17 @@ export function Login() {
 						type="submit"
 						disabled={isSubmitting}
 						className="w-full">
-						{isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
+						{isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
 					</Button>
 				</form>
 
 				<div className="border-t border-dashed border-(--color-border) px-6 py-3">
 					<p className="text-xs text-(--color-gray)">
-						¿No tienes cuenta?{" "}
+						¿Ya tienes cuenta?{" "}
 						<Link
-							to="/registro"
+							to="/login"
 							variant="text">
-							Regístrate
+							Inicia sesión
 						</Link>
 					</p>
 				</div>

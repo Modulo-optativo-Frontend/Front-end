@@ -2,7 +2,7 @@ import { getProductoImageUrl } from "../../lib/media.js";
 import { FeedbackMessage } from "../ui/FeedBackMessage.jsx";
 import { Button } from "../ui/Button.jsx";
 
-function TrendingProductsSection({
+export function TrendingProductsSection({
 	productosDestacados,
 	productos,
 	cartMessage,

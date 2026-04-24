@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SiteHeader } from "../components/layout/SiteHeader.jsx";
-import { SiteFooter } from "../components/layout/SiteFooter.jsx";
-import { ProductGrid } from "../components/product/ProductGrid.jsx";
-import { FeedbackMessage } from "../components/ui/FeedBackMessage.jsx";
-import { apiFetch } from "../lib/api.js";
-import { clearAuth, getAuthToken } from "../lib/auth.js";
+import { SiteHeader } from "../../components/layout/SiteHeader.jsx";
+import { SiteFooter } from "../../components/layout/SiteFooter.jsx";
+import { ProductGrid } from "../../components/product/ProductGrid.jsx";
+import { FeedbackMessage } from "../../components/ui/FeedBackMessage.jsx";
+import { apiFetch } from "../../lib/api.js";
+import { clearAuth, getAuthToken } from "../../lib/auth.js";
 
 export function Catalogo() {
 	const navigate = useNavigate();
