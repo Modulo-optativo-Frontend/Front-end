@@ -91,6 +91,7 @@ function Home() {
 			<SiteHeader
 				authToken={token}
 				onLogout={handleLogout}
+				dash={goToDash}
 			/>
 
 			<main>
