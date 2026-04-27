@@ -6,7 +6,7 @@ import { TrendingProductsSection } from "../../components/product/TrendingProduc
 import WhySilverLineSection from "./WhySilverLineSection.jsx";
 import { SiteFooter } from "../../components/layout/SiteFooter.jsx";
 import { apiFetch } from "../../lib/api.js";
-import { clearAuth, getAuthToken } from "../../lib/auth.js";
+import { clearAuth, getAuthToken, getAuthUser, isAdminUser } from "../../lib/auth.js";
 import { getProductoImageUrl } from "../../lib/media.js";
 
 function Home() {
@@ -75,7 +75,7 @@ function Home() {
 		if (!token) {
 			return;
 		}
-		navigate("./DashboardUser.jsx");
+		navigate(isAdminUser(getAuthUser()) ? "/admin" : "/dashboard");
 	}
 
 	function handleLogout() {

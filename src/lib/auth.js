@@ -18,6 +18,21 @@ export function getAuthUser() {
 	}
 }
 
+export function isAdminUser(user = getAuthUser()) {
+	if (!user) return false;
+
+	const role = String(
+		user.role || user.rol || user.tipo || user.type || "",
+	).toLowerCase();
+
+	return (
+		role === "admin" ||
+		role === "administrador" ||
+		user.isAdmin === true ||
+		user.admin === true
+	);
+}
+
 //sets
 export function setAuthToken(token) {
 	if (token) {

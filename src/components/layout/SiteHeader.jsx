@@ -1,7 +1,9 @@
 import { Button } from "../ui/Button.jsx";
 import { Link } from "../ui/Link.jsx";
+import { getAuthUser, isAdminUser } from "../../lib/auth.js";
 
 export function SiteHeader({ authToken, onLogout, dash }) {
+	const isAdmin = authToken ? isAdminUser(getAuthUser()) : false;
 	const navButtonClasses =
 		"relative inline-flex min-h-[2.9rem] items-center justify-center gap-[0.65rem] border border-line bg-[rgba(11,21,46,0.66)] px-[1.15rem] py-3 font-['Oxanium','Arial_Narrow',sans-serif] text-[0.78rem] font-bold uppercase tracking-[0.18em] text-ink transition-[transform,border-color,background-color,color,box-shadow] duration-180 ease-in hover:-translate-y-px hover:border-signal/60 hover:bg-[rgba(14,28,60,0.88)] hover:text-signal";
 
@@ -69,9 +71,16 @@ export function SiteHeader({ authToken, onLogout, dash }) {
 								<Button
 									onClick={dash}
 									className="-ml-px border border-(--color-border) px-5 py-2 text-xs font-bold uppercase">
-									[U] MI-CUENTA
+									{isAdmin ? "[A] ADMIN" : "[U] MI-CUENTA"}
 								</Button>
-							) : null}
+							) : (
+								<Link
+									to={isAdmin ? "/admin" : "/dashboard"}
+									variant="primary"
+									className="-ml-px min-h-0 px-4 py-2 text-xs">
+									{isAdmin ? "[A] ADMIN" : "[U] MI-CUENTA"}
+								</Link>
+							)}
 						</>
 					) : (
 						<>

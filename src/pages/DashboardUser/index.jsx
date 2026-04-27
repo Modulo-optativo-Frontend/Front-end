@@ -22,9 +22,16 @@ function renderDireccion(pedido) {
 	if (!pedido.entrega) return null;
 	if (pedido.entrega.metodo === "domicilio") {
 		const d = pedido.entrega.direccion;
-		return `${d?.calle} ${d?.numero}, ${d?.ciudad}`;
+		return `${d?.calle || ""} ${d?.numero || ""}, ${d?.ciudad || ""}`.trim();
 	}
 	return `Recogida · ${pedido.entrega.puntoNombre}`;
+}
+
+function formatPrice(precio) {
+	return new Intl.NumberFormat("es-ES", {
+		style: "currency",
+		currency: "EUR",
+	}).format(precio || 0);
 }
 
 export default function DashboardUser() {
@@ -42,6 +49,11 @@ export default function DashboardUser() {
 	const [cargandoPedidos, setCargandoPedidos] = useState(true);
 	// TODO: useEffect que llame a apiFetch("/api/pedidos/mis-pedidos", { token: authToken })
 	useEffect(() => {
+		if (!authToken) {
+			navigate("/login");
+			return;
+		}
+
 		async function cargarPedidos() {
 			try {
 				const res = await apiFetch("/api/pedidos/mis-pedidos", {
@@ -55,7 +67,7 @@ export default function DashboardUser() {
 			}
 		}
 		cargarPedidos();
-	}, [authToken]);
+	}, [authToken, navigate]);
 	//       y guarde el resultado en el estado de pedidos
 	//       cuando termine (con éxito o error) desactiva cargandoPedidos
 
@@ -67,6 +79,22 @@ export default function DashboardUser() {
 	}
 
 	// TODO: si no hay authToken, no renderizar nada (return null)
+	if (!authToken) return null;
+
+	const pedidosOrdenados = pedidos
+		.slice()
+		.sort(
+			(a, b) =>
+				new Date(b.creadoEn || b.createdAt || 0) -
+				new Date(a.creadoEn || a.createdAt || 0),
+		);
+	const ultimoPedido = pedidosOrdenados[0];
+	const totalPedidos = pedidos.length;
+	const totalGastado = pedidos.reduce((acc, pedido) => acc + (pedido.total || 0), 0);
+	const ultimoPedidoFecha = ultimoPedido
+		? formatFecha(ultimoPedido.creadoEn || ultimoPedido.createdAt)
+		: "Sin pedidos";
+	const ultimaDireccion = ultimoPedido ? renderDireccion(ultimoPedido) : "Sin compras";
 
 	return (
 		<div className="sl-page flex min-h-screen flex-col">
@@ -111,10 +139,10 @@ export default function DashboardUser() {
 					<div className="sl-panel-soft p-4">
 						{/* TODO: mostrar "—" si cargandoPedidos, si no mostrar totalPedidos */}
 						<p className="text-[10px] uppercase tracking-[0.28em] text-(--color-gray)">
-							—
+							Total pedidos
 						</p>
 						<p className="sl-display mt-3 text-2xl font-semibold">
-							Total pedidos
+							{cargandoPedidos ? "—" : totalPedidos}
 						</p>
 					</div>
 					<div className="sl-panel-soft p-4">
@@ -122,18 +150,18 @@ export default function DashboardUser() {
 						         la fecha del ultimoPedido si existe,
 						         o "Sin pedidos" si el array está vacío */}
 						<p className="text-[10px] uppercase tracking-[0.28em] text-(--color-gray)">
-							—
+							Último pedido
 						</p>
 						<p className="sl-display mt-3 text-xl font-semibold">
-							{renderDireccion(pedidos[0])}
+							{cargandoPedidos ? "—" : ultimoPedidoFecha}
 						</p>
 					</div>
 					<div className="sl-panel-soft p-4">
 						<p className="text-[10px] uppercase tracking-[0.28em] text-(--color-gray)">
-							Estado
+							Gastado
 						</p>
 						<p className="sl-display mt-3 text-xl font-semibold text-(--color-signal)">
-							Activo
+							{cargandoPedidos ? "—" : formatPrice(totalGastado)}
 						</p>
 					</div>
 				</section>
@@ -151,26 +179,26 @@ export default function DashboardUser() {
 								<div className="border-b border-(--color-border) pb-5">
 									{/* TODO: mostrar usuario?.email */}
 									<p className="text-[10px] uppercase tracking-[0.28em] text-(--color-gray)">
-										—
+										Correo
 									</p>
 									<p className="sl-display mt-2 text-base font-semibold">
-										{usuario?.email}
+										{usuario?.email || "—"}
 									</p>
 								</div>
 								<div className="border-b border-(--color-border) pb-5">
 									{/* TODO: mostrar la fecha de creación con formatFecha(usuario?.createdAt) */}
 									<p className="text-[10px] uppercase tracking-[0.28em] text-(--color-gray)">
-										—
+										Alta
 									</p>
 									<p className="sl-display mt-2 text-base font-semibold">
-										{formatFecha(usuario?.createdAt)}{" "}
+										{formatFecha(usuario?.createdAt || usuario?.creadoEn)}{" "}
 									</p>
 								</div>
 								<div>
 									<p className="text-[10px] uppercase tracking-[0.28em] text-(--color-gray)">
-										Dirección principal
+										Última entrega
 									</p>
-									<p className="sl-copy mt-2 text-sm">Sin dirección guardada</p>
+									<p className="sl-copy mt-2 text-sm">{ultimaDireccion}</p>
 								</div>
 							</div>
 						</div>

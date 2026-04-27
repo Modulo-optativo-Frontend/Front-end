@@ -10,6 +10,8 @@ import { CheckoutSuccess } from "./pages/Checkout/CheckoutSuccess";
 import { CheckoutCancel } from "./pages/Checkout/CheckoutCancel";
 import { MisPedidos } from "./pages/MisPedidos";
 import DashboardUser from "./pages/DashboardUser";
+import DashboardAdmin from "./pages/DashboardAdmin";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 function App() {
 	return (
@@ -54,11 +56,27 @@ function App() {
 			/>
 			<Route
 				path="/mis-pedidos"
-				element={<MisPedidos />}
+				element={
+					<ProtectedRoute>
+						<MisPedidos />
+					</ProtectedRoute>
+				}
 			/>
 			<Route
 				path="/dashboard"
-				element={<DashboardUser />}
+				element={
+					<ProtectedRoute>
+						<DashboardUser />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/admin"
+				element={
+					<ProtectedRoute adminOnly>
+						<DashboardAdmin />
+					</ProtectedRoute>
+				}
 			/>
 		</Routes>
 	);
